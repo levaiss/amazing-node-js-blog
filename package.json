@@ -1,0 +1,16 @@
+{
+  "name": "hillel-node-js-levin",
+  "version": "1.0.0",
+  "description": "homework for Hillel Node.js course",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node.js",
+    "express",
+    "mongodb"
+  ],
+  "author": "weblevin@gmail.com",
+  "license": "ISC"
+}
