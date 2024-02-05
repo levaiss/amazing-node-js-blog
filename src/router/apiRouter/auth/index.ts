@@ -1,11 +1,11 @@
 import { Router, Request, Response } from 'express';
-import { authenticateUser } from '../../../controllers/authController';
-import { ErrorTypes } from '../../../utils/error-types';
-import { CustomError } from '../../../utils/error-handler';
+import { authenticateUser } from '../../../controllers/authController.ts';
+import { ErrorTypes } from '../../../utils/error-types.ts';
+import { CustomError } from '../../../utils/error-handler.ts';
 
 const authRouter = Router();
 
-authRouter.get('/login', async (req: Request, res: Response) => {
+authRouter.post('/login', async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
     const userInfo = await authenticateUser(username, password);

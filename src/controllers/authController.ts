@@ -1,5 +1,5 @@
-import { UserModel, IUser } from '../models/UserModel';
-import { NotFoundError } from '../utils/error-handler';
+import { UserModel, IUser } from '../models/UserModel.ts';
+import { NotFoundError } from '../utils/error-handler.ts';
 
 export async function authenticateUser(username: string, password: string): Promise<IUser> {
   const userInfo = await UserModel.getByUsername(username);
@@ -7,5 +7,5 @@ export async function authenticateUser(username: string, password: string): Prom
     return userInfo;
   }
 
-  throw new NotFoundError('User not found!', null);
+  throw new NotFoundError('User not found!');
 }

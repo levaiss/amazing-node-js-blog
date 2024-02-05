@@ -1,10 +1,10 @@
-import { ErrorTypes } from './error-types';
+import { ErrorTypes } from './error-types.ts';
 
 export class CustomError extends Error {
   code: number;
   data: unknown;
 
-  constructor(message: string, data: unknown) {
+  constructor(message: string, data?: unknown) {
     super(message);
 
     this.code = ErrorTypes.BadRequest;
@@ -14,9 +14,10 @@ export class CustomError extends Error {
 }
 
 export class NotFoundError extends CustomError {
-  constructor(message: string, data: unknown) {
+  constructor(message: string, data?: unknown) {
     super(message, data);
 
+    this.code = ErrorTypes.NotFound;
     this.name = 'NotFoundError';
   }
 }

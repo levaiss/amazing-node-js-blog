@@ -1,5 +1,5 @@
-import { sleep } from '../utils/sleep';
-import { users } from '../db/users';
+import { sleep } from '../utils/sleep.ts';
+import { users } from '../db/users.ts';
 
 export interface IUser {
   username: string;
