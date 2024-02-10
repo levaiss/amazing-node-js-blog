@@ -4,4 +4,5 @@ export const RequestStatusCodes = Object.freeze({
   Unauthorized: 401,
   NotFound: 404,
   Validation: 422,
+  InternalServerError: 500
 });
