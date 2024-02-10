@@ -1,36 +1,36 @@
-import { sleep } from '../utils/sleep.ts';
-import { users } from '../db/users.ts';
+import { DbService } from '../services/DbService.ts';
 
 export interface IUser {
-  username: string;
+  login: string;
   password: string;
 }
 
 export class UserModel {
-  private readonly username: string;
+  private readonly login: string;
   private readonly password: string;
 
-  constructor({ username, password }: IUser) {
-    this.username = username;
+  constructor({ login, password }: IUser) {
+    this.login = login;
     this.password = password;
   }
 
-  async save(): Promise<boolean> {
-    await sleep(200);
-    users.push({
-      username: this.username,
-      password: this.password,
-    });
-    return true;
+  async save(): Promise<IUser> {
+    const newUser = {
+      login: this.login,
+      password: this.password
+    };
+
+    const { getData, setData } =  DbService.getInstance();
+    const db = await getData();
+    db.users.push(newUser);
+    await setData(db);
+
+    return newUser;
   }
 
   static async getAll(): Promise<IUser[]> {
-    await sleep(400);
-    return users;
-  }
-
-  static async getByUsername(username: string): Promise<IUser | undefined> {
-    const allUsers = await this.getAll();
-    return allUsers.find((user) => user.username === username);
+    const { getData } =  DbService.getInstance();
+    const db = await getData();
+    return db.users as IUser[];
   }
 }

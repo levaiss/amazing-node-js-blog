@@ -131,3 +131,8 @@ dist
 
 # IDE
 .idea
+
+.DS_store
+
+# fake db files
+src/db/**/*
