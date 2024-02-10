@@ -131,3 +131,9 @@ dist
 
 # IDE
 .idea
+
+.DS_store
+
+# Local files
+src/db/
+src/assets/
