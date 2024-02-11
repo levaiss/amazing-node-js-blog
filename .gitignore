@@ -136,3 +136,4 @@ dist
 
 # fake db files
 src/db/**/*
+public/images/**/*
