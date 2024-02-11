@@ -21,3 +21,12 @@ export class NotFoundError extends CustomError {
     this.name = 'NotFoundError';
   }
 }
+
+export class ValidationError extends CustomError {
+  constructor(message: string, data?: unknown) {
+    super(message, data);
+
+    this.code = RequestStatusCodes.Validation;
+    this.name = 'ValidationError';
+  }
+}

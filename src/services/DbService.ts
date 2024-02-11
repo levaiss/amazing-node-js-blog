@@ -37,11 +37,11 @@ export class DbService {
 
       await this.setData(mergedData);
 
-      console.log(`File ${fileName} has been successfully updated!`);
+      console.log(`♻️File ${fileName} has been successfully updated!`);
     } catch (error) {
       await this.setData(defaultData);
 
-      console.log(`File ${fileName} has been successfully created!`);
+      console.log(`✅File ${fileName} has been successfully created!`);
     }
   }
 

@@ -1,17 +1,14 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
-import express, { Application } from 'express';
 import 'dotenv/config';
+import path from 'path';
+import express, { Application } from 'express';
 import { DbService } from './services/DbService.ts';
 import router from './router/index.ts';
+import { srcPath } from './utils/path-helper.ts';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const rootPath = path.resolve(__dirname);
 const port = process.env.PORT || 8000;
 
 (async () => {
-  const dbFolderPath = path.join(rootPath, 'db');
+  const dbFolderPath = path.join(srcPath, 'db');
   const db = DbService.getInstance();
   await db.create(dbFolderPath, 'db.json', {
     users: [

@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { createUser, getAllUsers } from '../../../controllers/userController.ts';
 import { RequestStatusCodes } from '../../../utils/request-status-codes.ts';
+import { CustomError, ValidationError } from '../../../utils/error-halper.ts';
 
 const usersRouter = Router();
 
@@ -11,7 +12,7 @@ usersRouter.get('/', async (req: Request, res: Response) => {
   } catch (e) {
     res.status(RequestStatusCodes.InternalServerError).json({
       message: 'Something went wrong!'
-    })
+    });
   }
 });
 
@@ -19,18 +20,22 @@ usersRouter.post('/', async (req: Request, res: Response) => {
   try {
     const {login, password} = req.body;
     if (!login || !password) {
-      res.status(RequestStatusCodes.Validation).json({
-        message: 'Login and password is required fields!'
-      });
-      return;
+      throw new ValidationError('Login and password is required fields.')
     }
 
     const newUser = await createUser({login, password});
-    res.status(200).json(newUser);
+    res.status(RequestStatusCodes.Success).json(newUser);
   } catch (e) {
-    res.status(RequestStatusCodes.InternalServerError).json({
-      message: 'Something went wrong!'
-    })
+    if (e instanceof CustomError) {
+      const {code, message} = e;
+      res.status(code).json({
+        message
+      });
+    } else {
+      res.status(RequestStatusCodes.InternalServerError).json({
+        message: 'Something went wrong!'
+      });
+    }
   }
 });
 
