@@ -1,4 +1,4 @@
-import { RequestStatusCodes } from './request-status-codes.ts';
+import { RequestStatusCodes } from './request-status-codes';
 
 export class CustomError extends Error {
   code: number;
@@ -19,5 +19,14 @@ export class NotFoundError extends CustomError {
 
     this.code = RequestStatusCodes.NotFound;
     this.name = 'NotFoundError';
+  }
+}
+
+export class ValidationError extends CustomError {
+  constructor(message: string, data?: unknown) {
+    super(message, data);
+
+    this.code = RequestStatusCodes.Validation;
+    this.name = 'ValidationError';
   }
 }

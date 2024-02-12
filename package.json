@@ -11,12 +11,14 @@
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix"
   },
+  "nodemonConfig": {
+    "ignore": ["db/*"]
+  },
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint"
     }
   },
-  "type": "module",
   "keywords": [
     "node.js",
     "express",
