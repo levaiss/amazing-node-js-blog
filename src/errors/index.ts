@@ -1,4 +1,4 @@
-import { RequestStatusCodes } from './request-status-codes';
+import { RequestStatusCodes } from '../utils/request-status-codes';
 
 export class CustomError extends Error {
   code: number;
@@ -37,5 +37,14 @@ export class UnauthorizedError extends CustomError {
 
     this.code = RequestStatusCodes.Unauthorized;
     this.name = 'UnauthorizedError';
+  }
+}
+
+export class BadRequestError extends CustomError {
+  constructor(message: string, data?: unknown) {
+    super(message, data);
+
+    this.code = RequestStatusCodes.Unauthorized;
+    this.name = 'BadRequestError';
   }
 }
