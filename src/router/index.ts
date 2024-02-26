@@ -1,11 +1,12 @@
-import { Request, Response, Router } from 'express';
-import uploadRouter from './upload';
+import { Router } from 'express';
+import apiRouter from './api';
+import { requestLogger } from '../middleware/request-logger';
+import { notFoundHandler } from '../middleware/not-found-handler';
 
 const router = Router();
 
-router.get('/', (req: Request, res: Response) => {
-  res.send('⚡️Welcome to Express Server!');
-});
-router.use('/upload', uploadRouter);
+router.use(requestLogger);
+router.use('/api', apiRouter);
+router.use(notFoundHandler);
 
 export default router;
