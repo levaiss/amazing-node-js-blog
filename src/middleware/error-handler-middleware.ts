@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { RequestStatusCodes } from '../utils/request-status-codes';
 import { CustomError } from '../errors';
 
-export function errorHandler(err: Error | CustomError | never, req: Request, res: Response, next: NextFunction) {
+export function errorHandlerMiddleware(err: Error | CustomError | never, req: Request, res: Response, next: NextFunction) {
   let code: number = RequestStatusCodes.BadRequest;
   let message: string = 'Something went wrong';
   let data = null;

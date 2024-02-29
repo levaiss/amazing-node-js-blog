@@ -1,12 +1,18 @@
+// Core
 import { Router } from 'express';
-import { validationHandler } from '../../../middleware/validation-handler';
-import { userSignInSchema, userSignUpSchema } from '../../../validation/user';
+
+// Controllers
 import { createUser, loginUser } from '../../../controllers/user-controller';
+
+// Middleware
+import { requestValidationMiddleware } from '../../../middleware/request-validation-middleware';
+
+// Helpers
+import { userLoginSchema, userRegistrationSchema } from '../../../validation/user-schema';
 
 const router = Router();
 
-router.post('/signin', validationHandler(userSignInSchema), loginUser);
-
-router.post('/signup', validationHandler(userSignUpSchema), createUser);
+router.post('/login', requestValidationMiddleware(userLoginSchema), loginUser);
+router.post('/registration', requestValidationMiddleware(userRegistrationSchema), createUser);
 
 export default router;

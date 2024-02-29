@@ -35,6 +35,11 @@ export class User {
     return users;
   }
 
+  static async getById(id: string): Promise<IUser | undefined> {
+    const allUsers = await this.getAll();
+    return allUsers.find((user) => user.id === id);
+  }
+
   static async getByUsername(username: string): Promise<IUser | undefined> {
     const allUsers = await this.getAll();
     return allUsers.find((user) => user.username === username);
