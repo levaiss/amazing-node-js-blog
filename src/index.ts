@@ -14,7 +14,7 @@ import { requestLoggerMiddleware } from './middleware/request-logger-middleware'
 import { notFoundHandlerMiddleware } from './middleware/not-found-handler-middleware';
 import { errorHandlerMiddleware } from './middleware/error-handler-middleware';
 
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 3000;
 
 const app: Application = express();
 
