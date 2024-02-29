@@ -25,7 +25,7 @@ app.use(passport.initialize());
 app.use(notFoundHandlerMiddleware);
 app.use(errorHandlerMiddleware);
 
-AuthService.initJwtStrategy(passport);
+passport.use(AuthService.getJwtStrategy())
 
 app.listen(port, async () => {
   console.log(`🔥Server is Fire at http://localhost:${port}`);

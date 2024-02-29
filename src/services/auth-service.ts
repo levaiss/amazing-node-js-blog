@@ -1,5 +1,4 @@
 // Core
-import { PassportStatic } from 'passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
@@ -8,40 +7,67 @@ import bcrypt from 'bcrypt';
 import { User } from '../models/User';
 
 // Helpers
-import { jwtSecretKey } from '../config/jwt-config';
+import { accessTokenSecretKey, refreshTokenSecretKey } from '../config/jwt-config';
+import { ValidationError } from '../errors';
+
+export interface IJwtTokenPayload {
+  username: string,
+  userId: string,
+  iat: number,
+  exp: number
+}
 
 export default class AuthService {
-  static initJwtStrategy(passport: PassportStatic) {
+  static getJwtStrategy() {
     const jwtStrategyOption = {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: jwtSecretKey,
+      secretOrKey: accessTokenSecretKey,
     };
 
-    passport.use(
-      new Strategy(jwtStrategyOption, async (payload, done) => {
-        try {
-          const user = await User.getById(payload.userId);
+    return new Strategy(jwtStrategyOption, async (payload, done) => {
+      try {
+        const user = await User.getById(payload.userId);
 
-          if (user) {
-            done(null, user)
-          } else {
-            done(null, false)
-          }
-        } catch (e) {
-          console.error('[passport/JwtStrategy]', e);
+        if (user) {
+          done(null, user)
+        } else {
+          done(null, false)
         }
-      }));
+      } catch (e) {
+        console.error('[JwtStrategy]', e);
+      }
+    })
   }
 
-  static createJwtToken(username: string, userId: string): string {
+  static createAccessToken(username: string, userId: string): string {
     return jwt.sign(
       {
         username,
         userId,
       },
-      jwtSecretKey,
+      accessTokenSecretKey,
       { expiresIn: '1h' },
     )
+  }
+
+  static createRefreshToken(username: string, userId: string): string {
+    return jwt.sign(
+      {
+        username,
+        userId,
+      },
+      refreshTokenSecretKey,
+      { expiresIn: '7d' },
+    )
+  }
+
+  static decodeRefreshToken(token: string): IJwtTokenPayload | ValidationError {
+    try {
+      return jwt.verify(token, refreshTokenSecretKey) as IJwtTokenPayload;
+    } catch(e) {
+      return new ValidationError('Refresh token is incorrect or expired');
+    }
+
   }
 
   static async createHashedPassword(password: string): Promise<string> {

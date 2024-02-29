@@ -1,1 +1,2 @@
-export const jwtSecretKey = 'secret-key';
+export const accessTokenSecretKey = 'secret-key';
+export const refreshTokenSecretKey = 'refresh-secret-key';
