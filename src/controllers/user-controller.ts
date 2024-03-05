@@ -1,11 +1,12 @@
 // Core
 import { NextFunction, Request, Response } from 'express';
+import { HydratedDocument } from 'mongoose';
 
 // Services
 import AuthService from '../services/auth-service';
 
 // Models
-import { IUser, User } from '../models/User';
+import { UserModel, TUser } from '../models/User';
 
 // Helpers
 import { BadRequestError } from '../errors';
@@ -14,30 +15,32 @@ import { RequestStatusCodes } from '../utils/request-status-codes';
 export async function createUser(req: Request, res: Response, next: NextFunction) {
   const { username, password, email } = req.body;
 
-  const existingUser = await User.getByUsername(username);
+  const existingUser = await UserModel.findOne({ username });
   if (existingUser) {
     return next(new BadRequestError('Username already exists'));
   }
 
-  const user = await new User({
+  const hashedPassword = await AuthService.createHashedPassword(password);
+  const user: HydratedDocument<TUser> = new UserModel({
     username,
-    password,
-    email
-  } as IUser).save();
+    password: hashedPassword,
+    email,
+  });
+  await user.save();
 
-  const accessToken = AuthService.createAccessToken(user.username, user.id);
-  const refreshToken = AuthService.createRefreshToken(user.username, user.id);
+  const accessToken = AuthService.createAccessToken(user);
+  const refreshToken = AuthService.createRefreshToken(user);
 
   res.status(RequestStatusCodes.Created).json({
     accessToken,
-    refreshToken
+    refreshToken,
   });
 }
 
 export async function loginUser(req: Request, res: Response, next: NextFunction) {
   const { username, password } = req.body;
 
-  const existingUser = await User.getByUsername(username);
+  const existingUser = await UserModel.findOne({ username });
   if (!existingUser) {
     return next(new BadRequestError('Username or password is incorrect'));
   }
@@ -47,37 +50,27 @@ export async function loginUser(req: Request, res: Response, next: NextFunction)
     return next(new BadRequestError('Username or password is incorrect'));
   }
 
-  const accessToken = AuthService.createAccessToken(existingUser.username, existingUser.id);
-  const refreshToken = AuthService.createRefreshToken(existingUser.username, existingUser.id);
+  const accessToken = AuthService.createAccessToken(existingUser);
+  const refreshToken = AuthService.createRefreshToken(existingUser);
 
   res.status(RequestStatusCodes.Success).json({
     accessToken,
-    refreshToken
+    refreshToken,
   });
 }
 
 export function getUser(req: Request, res: Response) {
   const { user } = req;
 
-  const {username, email, id} = user as IUser;
-
-  res
-    .status(RequestStatusCodes.Success)
-    .json({
-      user: {
-        username,
-        email,
-        id,
-      }
-    });
+  res.status(RequestStatusCodes.Success).json({
+    user,
+  });
 }
 
 export function updateRefreshToken(req: Request, res: Response) {
   const { user } = req;
 
-  const { username, id} = user as IUser;
-
-  const accessToken = AuthService.createAccessToken(username, id);
+  const accessToken = AuthService.createAccessToken(user as TUser);
 
   res.status(RequestStatusCodes.Success).json({
     accessToken,
