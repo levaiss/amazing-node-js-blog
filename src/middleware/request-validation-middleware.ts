@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { Schema } from 'joi';
 import { ValidationError } from '../errors';
 
-export function validationHandler(schema: Schema) {
+export function requestValidationMiddleware(schema: Schema) {
   return (req: Request, res: Response, next: NextFunction) => {
     const { error } = schema.validate(req.body);
     if (error) {

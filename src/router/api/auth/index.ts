@@ -1,12 +1,21 @@
+// Core
 import { Router } from 'express';
-import { validationHandler } from '../../../middleware/validation-handler';
-import { userSignInSchema, userSignUpSchema } from '../../../validation/user';
-import { createUser, loginUser } from '../../../controllers/user-controller';
+
+// Controllers
+import { createUser, loginUser, updateRefreshToken } from '../../../controllers/user-controller';
+
+// Middleware
+import { requestValidationMiddleware } from '../../../middleware/request-validation-middleware';
+import { authHandlerMiddleware } from '../../../middleware/auth-handler-middleware';
+
+// Helpers
+import { userLoginSchema, userRegistrationSchema } from '../../../validation/user-schema';
+import { AUTH_STRATEGIES_TYPE } from '../../../services/auth-service';
 
 const router = Router();
 
-router.post('/signin', validationHandler(userSignInSchema), loginUser);
-
-router.post('/signup', validationHandler(userSignUpSchema), createUser);
+router.post('/login', requestValidationMiddleware(userLoginSchema), loginUser);
+router.post('/registration', requestValidationMiddleware(userRegistrationSchema), createUser);
+router.post('/refresh-token', authHandlerMiddleware(AUTH_STRATEGIES_TYPE.REFRESH_TOKEN), updateRefreshToken);
 
 export default router;

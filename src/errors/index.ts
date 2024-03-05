@@ -44,7 +44,7 @@ export class BadRequestError extends CustomError {
   constructor(message: string, data?: unknown) {
     super(message, data);
 
-    this.code = RequestStatusCodes.Unauthorized;
+    this.code = RequestStatusCodes.BadRequest;
     this.name = 'BadRequestError';
   }
 }
