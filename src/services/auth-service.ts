@@ -17,14 +17,21 @@ export interface IJwtTokenPayload {
   exp: number
 }
 
+export const AUTH_STRATEGIES_TYPE = {
+  ACCESS_TOKEN: 'accessToken',
+  REFRESH_TOKEN: 'refreshToken'
+} as const;
+
+export type AuthStrategiesType = typeof AUTH_STRATEGIES_TYPE[keyof typeof AUTH_STRATEGIES_TYPE];
+
 export default class AuthService {
-  static getJwtStrategy() {
-    const jwtStrategyOption = {
+  static getAccessTokenStrategy() {
+    const accessTokenStrategyOption = {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: accessTokenSecretKey,
     };
 
-    return new Strategy(jwtStrategyOption, async (payload, done) => {
+    return new Strategy(accessTokenStrategyOption, async (payload, done) => {
       try {
         const user = await User.getById(payload.userId);
 
@@ -34,31 +41,52 @@ export default class AuthService {
           done(null, false)
         }
       } catch (e) {
-        console.error('[JwtStrategy]', e);
+        console.error('[AccessTokenStrategy]', e);
+      }
+    })
+  }
+
+  static getRefreshTokenStrategy() {
+    const refreshTokenStrategyOption = {
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: refreshTokenSecretKey,
+    };
+
+    return new Strategy(refreshTokenStrategyOption, async (payload, done) => {
+      try {
+        const user = await User.getById(payload.userId);
+
+        if (user) {
+          done(null, user)
+        } else {
+          done(null, false)
+        }
+      } catch (e) {
+        console.error('[RefreshTokenStrategy]', e);
       }
     })
   }
 
   static createAccessToken(username: string, userId: string): string {
-    return jwt.sign(
+    return `Bearer ${jwt.sign(
       {
         username,
         userId,
       },
       accessTokenSecretKey,
       { expiresIn: '1h' },
-    )
+    )}`
   }
 
   static createRefreshToken(username: string, userId: string): string {
-    return jwt.sign(
+    return `Bearer ${jwt.sign(
       {
         username,
         userId,
       },
       refreshTokenSecretKey,
       { expiresIn: '7d' },
-    )
+    )}`
   }
 
   static decodeRefreshToken(token: string): IJwtTokenPayload | ValidationError {

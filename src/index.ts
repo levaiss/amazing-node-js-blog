@@ -7,7 +7,7 @@ import passport from 'passport';
 import router from './router/index';
 
 // Services
-import AuthService from './services/auth-service';
+import AuthService, { AUTH_STRATEGIES_TYPE } from './services/auth-service';
 
 // Middlewares
 import { requestLoggerMiddleware } from './middleware/request-logger-middleware';
@@ -25,7 +25,8 @@ app.use(passport.initialize());
 app.use(notFoundHandlerMiddleware);
 app.use(errorHandlerMiddleware);
 
-passport.use(AuthService.getJwtStrategy())
+passport.use(AUTH_STRATEGIES_TYPE.ACCESS_TOKEN, AuthService.getAccessTokenStrategy());
+passport.use(AUTH_STRATEGIES_TYPE.REFRESH_TOKEN, AuthService.getRefreshTokenStrategy());
 
 app.listen(port, async () => {
   console.log(`🔥Server is Fire at http://localhost:${port}`);

@@ -8,7 +8,7 @@ import AuthService from '../services/auth-service';
 import { IUser, User } from '../models/User';
 
 // Helpers
-import { BadRequestError, UnauthorizedError, ValidationError } from '../errors';
+import { BadRequestError } from '../errors';
 import { RequestStatusCodes } from '../utils/request-status-codes';
 
 export async function createUser(req: Request, res: Response, next: NextFunction) {
@@ -72,16 +72,12 @@ export function getUser(req: Request, res: Response) {
     });
 }
 
-export function updateRefreshToken(req: Request, res: Response, next: NextFunction) {
-  const { refreshToken } = req.body;
+export function updateRefreshToken(req: Request, res: Response) {
+  const { user } = req;
 
-  const existingRefreshToken = AuthService.decodeRefreshToken(refreshToken);
-  if (existingRefreshToken instanceof ValidationError) {
-    return next(new UnauthorizedError('Incorrect refresh token'));
-  }
+  const { username, id} = user as IUser;
 
-  const { username, userId } = existingRefreshToken;
-  const accessToken = AuthService.createAccessToken(username, userId);
+  const accessToken = AuthService.createAccessToken(username, id);
 
   res.status(RequestStatusCodes.Success).json({
     accessToken,
