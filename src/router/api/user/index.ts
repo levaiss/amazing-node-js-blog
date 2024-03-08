@@ -10,6 +10,7 @@ import { authHandlerMiddleware } from '../../../middleware/auth-handler-middlewa
 const router = Router();
 
 router.use(authHandlerMiddleware());
+
 router.get('/me', getUser);
 
 export default router;

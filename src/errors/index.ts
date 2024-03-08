@@ -48,3 +48,12 @@ export class BadRequestError extends CustomError {
     this.name = 'BadRequestError';
   }
 }
+
+export class InternalServerError extends CustomError {
+  constructor(message: string, data?: unknown) {
+    super(message, data);
+
+    this.code = RequestStatusCodes.InternalServerError;
+    this.name = 'InternalServerError';
+  }
+}

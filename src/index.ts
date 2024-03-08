@@ -1,33 +1,7 @@
-// Core
-import 'dotenv/config';
-import express, { Application } from 'express';
-import passport from 'passport';
+import Server from './server';
 
-// Router
-import router from './router/index';
-
-// Services
-import AuthService, { AUTH_STRATEGIES_TYPE } from './services/auth-service';
-
-// Middlewares
-import { requestLoggerMiddleware } from './middleware/request-logger-middleware';
-import { notFoundHandlerMiddleware } from './middleware/not-found-handler-middleware';
-import { errorHandlerMiddleware } from './middleware/error-handler-middleware';
-
-const port = process.env.PORT || 3000;
-
-const app: Application = express();
-
-app.use(express.json());
-app.use(requestLoggerMiddleware);
-app.use(router);
-app.use(passport.initialize());
-app.use(notFoundHandlerMiddleware);
-app.use(errorHandlerMiddleware);
-
-passport.use(AUTH_STRATEGIES_TYPE.ACCESS_TOKEN, AuthService.getAccessTokenStrategy());
-passport.use(AUTH_STRATEGIES_TYPE.REFRESH_TOKEN, AuthService.getRefreshTokenStrategy());
-
-app.listen(port, async () => {
-  console.log(`🔥Server is Fire at http://localhost:${port}`);
+const server = new Server();
+server.run().catch((e) => {
+  console.log(e);
+  process.exit(1);
 });

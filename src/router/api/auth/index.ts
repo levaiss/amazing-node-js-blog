@@ -15,7 +15,9 @@ import { AUTH_STRATEGIES_TYPE } from '../../../services/auth-service';
 const router = Router();
 
 router.post('/login', requestValidationMiddleware(userLoginSchema), loginUser);
+
 router.post('/registration', requestValidationMiddleware(userRegistrationSchema), createUser);
+
 router.post('/refresh-token', authHandlerMiddleware(AUTH_STRATEGIES_TYPE.REFRESH_TOKEN), updateRefreshToken);
 
 export default router;

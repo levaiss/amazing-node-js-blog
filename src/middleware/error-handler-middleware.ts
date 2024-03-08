@@ -13,12 +13,10 @@ export function errorHandlerMiddleware(err: Error | CustomError | never, req: Re
     data = err.data;
   }
 
-  res
-    .status(code)
-    .json({
-      message,
-      data
-    });
+  res.status(code).json({
+    message,
+    data,
+  });
 
   next();
 }
