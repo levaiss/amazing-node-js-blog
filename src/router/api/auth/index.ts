@@ -4,13 +4,15 @@ import { Router } from 'express';
 // Controllers
 import { createUser, loginUser, updateRefreshToken } from '../../../controller/user.controller';
 
+// Services
+import { AUTH_STRATEGIES_TYPE } from '../../../service/auth.service';
+
 // Middleware
 import { requestValidationMiddleware } from '../../../middleware/request-validation.middleware';
 import { authHandlerMiddleware } from '../../../middleware/auth-handler.middleware';
 
 // Helpers
 import { userLoginSchema, userRegistrationSchema } from '../../../schema/user.schema';
-import { AUTH_STRATEGIES_TYPE } from '../../../service/auth.service';
 
 const router = Router();
 
