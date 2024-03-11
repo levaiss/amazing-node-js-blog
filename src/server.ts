@@ -7,13 +7,13 @@ import passport from 'passport';
 import router from './router/index';
 
 // Services
-import AuthService, { AUTH_STRATEGIES_TYPE } from './services/auth-service';
-import DbService from './services/db-service';
+import AuthService, { AUTH_STRATEGIES_TYPE } from './services/auth.service';
+import DbService from './services/db.service';
 
 // Middlewares
-import { requestLoggerMiddleware } from './middleware/request-logger-middleware';
-import { notFoundHandlerMiddleware } from './middleware/not-found-handler-middleware';
-import { errorHandlerMiddleware } from './middleware/error-handler-middleware';
+import { requestLoggerMiddleware } from './middleware/request-logger.middleware';
+import { notFoundHandlerMiddleware } from './middleware/not-found-handler.middleware';
+import { errorHandlerMiddleware } from './middleware/error-handler.middleware';
 
 export default class Server {
   private readonly app: Application;

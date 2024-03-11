@@ -3,14 +3,14 @@ import { NextFunction, Request, Response } from 'express';
 import { HydratedDocument } from 'mongoose';
 
 // Services
-import AuthService from '../services/auth-service';
+import AuthService from '../services/auth.service';
 
 // Models
-import { UserModel, TUser } from '../models/User';
+import { UserModel, TUser } from '../model/user.model';
 
 // Helpers
 import { BadRequestError } from '../errors';
-import { RequestStatusCodes } from '../utils/request-status-codes';
+import { RequestStatusCodes } from '../const/request-status-codes';
 
 export async function createUser(req: Request, res: Response, next: NextFunction) {
   const { username, password, email } = req.body;

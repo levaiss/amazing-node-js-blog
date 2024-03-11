@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { RequestStatusCodes } from '../utils/request-status-codes';
+import { RequestStatusCodes } from '../const/request-status-codes';
 import { CustomError } from '../errors';
 
 export function errorHandlerMiddleware(err: Error | CustomError | never, req: Request, res: Response, next: NextFunction) {

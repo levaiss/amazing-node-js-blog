@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 // Models
-import { TUser, UserModel } from '../models/User';
+import { TUser, UserModel } from '../model/user.model';
 
 // Helpers
 import { accessTokenSecretKey, refreshTokenSecretKey } from '../config/jwt-config';

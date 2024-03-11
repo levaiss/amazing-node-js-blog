@@ -1,4 +1,4 @@
-import { RequestStatusCodes } from '../utils/request-status-codes';
+import { RequestStatusCodes } from '../const/request-status-codes';
 
 export class CustomError extends Error {
   code: number;

@@ -2,10 +2,10 @@
 import { Router } from 'express';
 
 // Controllers
-import { getUser } from '../../../controllers/user-controller';
+import { getUser } from '../../../controller/user.controller';
 
 // Middlewares
-import { authHandlerMiddleware } from '../../../middleware/auth-handler-middleware';
+import { authHandlerMiddleware } from '../../../middleware/auth-handler.middleware';
 
 const router = Router();
 
