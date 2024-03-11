@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import { HydratedDocument } from 'mongoose';
 
 // Services
-import AuthService from '../services/auth.service';
+import AuthService from '../service/auth.service';
 
 // Models
 import { UserModel, TUser } from '../model/user.model';

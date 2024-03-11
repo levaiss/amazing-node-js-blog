@@ -7,8 +7,8 @@ import passport from 'passport';
 import router from './router/index';
 
 // Services
-import AuthService, { AUTH_STRATEGIES_TYPE } from './services/auth.service';
-import DbService from './services/db.service';
+import AuthService, { AUTH_STRATEGIES_TYPE } from './service/auth.service';
+import DbService from './service/db.service';
 
 // Middlewares
 import { requestLoggerMiddleware } from './middleware/request-logger.middleware';
@@ -52,8 +52,3 @@ export default class Server {
     this.initServer();
   }
 }
-
-
-
-
-
