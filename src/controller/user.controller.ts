@@ -1,12 +1,11 @@
 // Core
 import { NextFunction, Request, Response } from 'express';
-import { HydratedDocument } from 'mongoose';
 
 // Services
 import AuthService from '../service/auth.service';
 
 // Models
-import { UserModel, TUser } from '../model/user.model';
+import UserModel, { IUser } from '../db/model/user.model';
 
 // Helpers
 import { BadRequestError } from '../errors';
@@ -21,7 +20,7 @@ export async function createUser(req: Request, res: Response, next: NextFunction
   }
 
   const hashedPassword = await AuthService.createHashedPassword(password);
-  const user: HydratedDocument<TUser> = new UserModel({
+  const user = new UserModel({
     username,
     password: hashedPassword,
     email,
@@ -70,7 +69,7 @@ export function getUser(req: Request, res: Response) {
 export function updateRefreshToken(req: Request, res: Response) {
   const { user } = req;
 
-  const accessToken = AuthService.createAccessToken(user as TUser);
+  const accessToken = AuthService.createAccessToken(user as IUser);
 
   res.status(RequestStatusCodes.Success).json({
     accessToken,

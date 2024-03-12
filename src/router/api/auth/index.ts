@@ -12,13 +12,13 @@ import { requestValidationMiddleware } from '../../../middleware/request-validat
 import { authHandlerMiddleware } from '../../../middleware/auth-handler.middleware';
 
 // Helpers
-import { userLoginSchema, userRegistrationSchema } from '../../../schema/user.schema';
+import { userLoginValidator, userRegistrationValidator } from '../../../validator/user.validator';
 
 const router = Router();
 
-router.post('/login', requestValidationMiddleware(userLoginSchema), loginUser);
+router.post('/login', requestValidationMiddleware(userLoginValidator), loginUser);
 
-router.post('/registration', requestValidationMiddleware(userRegistrationSchema), createUser);
+router.post('/registration', requestValidationMiddleware(userRegistrationValidator), createUser);
 
 router.post('/refresh-token', authHandlerMiddleware(AUTH_STRATEGIES_TYPE.REFRESH_TOKEN), updateRefreshToken);
 

@@ -4,10 +4,10 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 // Models
-import { TUser, UserModel } from '../model/user.model';
+import UserModel, { IUser } from '../db/model/user.model';
 
 // Helpers
-import { accessTokenSecretKey, refreshTokenSecretKey } from '../config/jwt-config';
+import { accessTokenSecretKey, refreshTokenSecretKey } from '../config/jwt.config';
 
 export const AUTH_STRATEGIES_TYPE = {
   ACCESS_TOKEN: 'accessToken',
@@ -59,7 +59,7 @@ export default class AuthService {
     });
   }
 
-  static createAccessToken(user: TUser): string {
+  static createAccessToken(user: IUser): string {
     const { username, _id: userId } = user;
 
     return `Bearer ${jwt.sign(
@@ -72,7 +72,7 @@ export default class AuthService {
     )}`;
   }
 
-  static createRefreshToken(user: TUser): string {
+  static createRefreshToken(user: IUser): string {
     const { username, _id: userId } = user;
 
     return `Bearer ${jwt.sign(

@@ -6,9 +6,11 @@ import passport from 'passport';
 // Router
 import router from './router/index';
 
+// Database
+import Database from './db';
+
 // Services
 import AuthService, { AUTH_STRATEGIES_TYPE } from './service/auth.service';
-import DbService from './service/db.service';
 
 // Middlewares
 import { requestLoggerMiddleware } from './middleware/request-logger.middleware';
@@ -18,14 +20,16 @@ import { errorHandlerMiddleware } from './middleware/error-handler.middleware';
 export default class Server {
   private readonly app: Application;
   private readonly port: string | number;
+  private readonly mongoDbURI: string;
 
   constructor() {
     this.app = express();
     this.port = process.env.PORT || 3000;
+    this.mongoDbURI = process.env.MONGO_DB_URI || '';
   }
 
   async initServices() {
-    await new DbService().createConnection();
+    await new Database(this.mongoDbURI).connect();
   }
 
   initApplication() {
