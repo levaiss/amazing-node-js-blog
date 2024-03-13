@@ -1,7 +1,11 @@
 // Core
-import 'dotenv/config';
+import dotenv from 'dotenv';
+import path from 'path';
 import express, { Application } from 'express';
+import cors from 'cors';
 import passport from 'passport';
+
+dotenv.config({ path: '../.env' });
 
 // Router
 import router from './router/index';
@@ -17,6 +21,9 @@ import { requestLoggerMiddleware } from './middleware/request-logger.middleware'
 import { notFoundHandlerMiddleware } from './middleware/not-found-handler.middleware';
 import { errorHandlerMiddleware } from './middleware/error-handler.middleware';
 
+// Helpers
+import { rootPath } from './utils/path-helper';
+
 export default class Server {
   private readonly app: Application;
   private readonly port: string | number;
@@ -24,8 +31,8 @@ export default class Server {
 
   constructor() {
     this.app = express();
-    this.port = process.env.PORT || 3000;
-    this.mongoDbURI = process.env.MONGO_DB_URI || '';
+    this.port = process.env.APP_PORT || 3000;
+    this.mongoDbURI = process.env.MONGODB_URI || '';
   }
 
   async initServices() {
@@ -33,7 +40,9 @@ export default class Server {
   }
 
   initApplication() {
+    this.app.use(cors());
     this.app.use(express.json());
+    this.app.use(express.static(path.join(rootPath, 'client/dist')));
     this.app.use(requestLoggerMiddleware);
     this.app.use(router);
     this.app.use(passport.initialize());

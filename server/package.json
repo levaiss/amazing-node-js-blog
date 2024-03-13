@@ -4,12 +4,12 @@
   "description": "homework for Hillel Node.js course",
   "main": "src/index.ts",
   "scripts": {
-    "build": "npx tsc",
-    "start": "node dist/index.js",
-    "dev": "nodemon src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint src/**/*.ts",
-    "lint:fix": "eslint src/**/*.ts --fix"
+    "server:build": "npx tsc",
+    "server:start": "node dist/index.js",
+    "server:dev": "nodemon src/index.ts",
+    "server:test": "echo \"Error: no test specified\" && exit 1",
+    "server:lint": "eslint src/**/*.ts",
+    "server:lint:fix": "eslint src/**/*.ts --fix"
   },
   "nodemonConfig": {
     "ignore": [
@@ -32,6 +32,7 @@
     "axios": "^1.6.7",
     "bcrypt": "^5.1.1",
     "busboy": "^1.6.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.1",
     "express": "^4.18.2",
     "joi": "^17.12.2",
