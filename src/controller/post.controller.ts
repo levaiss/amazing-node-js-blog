@@ -21,7 +21,7 @@ export async function createPost(req: Request, res: Response, next: NextFunction
     });
     await post.save();
 
-    res.status(RequestStatusCodes.Created).json({ post });
+    res.status(RequestStatusCodes.Created).json({ post: post.toJSON() });
   } catch (e) {
     next(e);
   }
