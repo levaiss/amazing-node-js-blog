@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { InternalServerError } from '../errors';
+import { InternalServerError } from '../../errors';
 
 export default class Database {
   private readonly URI: string;

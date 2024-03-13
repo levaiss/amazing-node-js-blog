@@ -7,10 +7,10 @@ import passport from 'passport';
 import router from './router/index';
 
 // Database
-import Database from './db';
+import Database from './service/database';
 
 // Services
-import AuthService, { AUTH_STRATEGIES_TYPE } from './service/auth.service';
+import AuthService, { AUTH_STRATEGIES_TYPE } from './service/auth';
 
 // Middlewares
 import { requestLoggerMiddleware } from './middleware/request-logger.middleware';

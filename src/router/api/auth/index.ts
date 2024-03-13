@@ -5,7 +5,7 @@ import { Router } from 'express';
 import { createUser, loginUser, updateRefreshToken } from '../../../controller/user.controller';
 
 // Services
-import { AUTH_STRATEGIES_TYPE } from '../../../service/auth.service';
+import { AUTH_STRATEGIES_TYPE } from '../../../service/auth';
 
 // Middleware
 import { requestValidationMiddleware } from '../../../middleware/request-validation.middleware';

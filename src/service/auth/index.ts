@@ -4,10 +4,10 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 // Models
-import UserModel, { IUser } from '../db/model/user.model';
+import UserModel, { IUser } from '../database/model/user.model';
 
 // Helpers
-import { accessTokenSecretKey, refreshTokenSecretKey } from '../config/jwt.config';
+import { accessTokenSecretKey, refreshTokenSecretKey } from '../../config/jwt.config';
 
 export const AUTH_STRATEGIES_TYPE = {
   ACCESS_TOKEN: 'accessToken',

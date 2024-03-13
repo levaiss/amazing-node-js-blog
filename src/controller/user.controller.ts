@@ -2,10 +2,10 @@
 import { NextFunction, Request, Response } from 'express';
 
 // Services
-import AuthService from '../service/auth.service';
+import AuthService from '../service/auth';
 
 // Models
-import UserModel, { IUser } from '../db/model/user.model';
+import UserModel, { IUser } from '../service/database/model/user.model';
 
 // Helpers
 import { BadRequestError } from '../errors';
