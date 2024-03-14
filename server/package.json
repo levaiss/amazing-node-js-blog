@@ -4,7 +4,6 @@
   "description": "homework for Hillel Node.js course",
   "main": "src/index.ts",
   "scripts": {
-    "dev": "npm run server:dev && npm run client:dev",
     "build": "npm run server:build && npm run client:build",
     "server:build": "npx tsc",
     "server:start": "node dist/index.js",
