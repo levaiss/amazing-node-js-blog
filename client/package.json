@@ -4,10 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "client:dev": "APP_ENV=development vite",
-    "client:build": "vite build",
-    "client:lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "client:preview": "vite preview"
+    "dev": "APP_ENV=development vite",
+    "build": "vite build",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
   },
   "dependencies": {
     "axios": "^1.6.7",
