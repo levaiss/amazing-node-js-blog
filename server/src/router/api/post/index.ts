@@ -2,7 +2,7 @@
 import { Router } from 'express';
 
 // Controllers
-import { getPosts, getPost, createPost, updatePost, updatePostPartially, deletePost } from '../../../controller/post.controller';
+import { getPosts, getPost, createPost, updatePost, deletePost } from '../../../controller/post.controller';
 
 // Middlewares
 import { authHandlerMiddleware } from '../../../middleware/auth-handler.middleware';
@@ -19,9 +19,7 @@ router.get('/', getPosts);
 
 router.get('/:id', getPost);
 
-router.put('/:id', authHandlerMiddleware(), requestValidationMiddleware(createPostValidator), updatePost);
-
-router.patch('/:id', authHandlerMiddleware(), requestValidationMiddleware(updatePostValidator), updatePostPartially);
+router.patch('/:id', authHandlerMiddleware(), requestValidationMiddleware(updatePostValidator), updatePost);
 
 router.delete('/:id', authHandlerMiddleware(), deletePost);
 

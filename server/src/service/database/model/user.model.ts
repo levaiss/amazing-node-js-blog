@@ -1,14 +1,16 @@
 // Core
+import bcrypt from 'bcrypt';
 import { Document, Schema, model } from 'mongoose';
 import mongooseUniqueValidator from 'mongoose-unique-validator';
 
 // Helpers
-import bcrypt from 'bcrypt';
+import { Roles, ROLES_NAME } from '../../../config/roles.config';
 
 export interface IUserModel extends Document {
   username: string;
   email: string;
   password: string;
+  role: Roles;
   createHashedPassword(password: string): string;
   validPassword(password: string): boolean;
 }
@@ -29,6 +31,10 @@ const UserSchema = new Schema<IUserModel>(
       type: Schema.Types.String,
       required: true,
     },
+    role: {
+      type: Schema.Types.Number,
+      default: Roles.USER,
+    },
   },
   {
     timestamps: true,
@@ -40,6 +46,7 @@ UserSchema.methods.toJSON = function () {
     id: this._id,
     username: this.username,
     email: this.email,
+    role: ROLES_NAME[this.role as Roles],
   };
 };
 

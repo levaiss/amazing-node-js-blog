@@ -8,7 +8,7 @@ import AuthService from '../service/auth';
 import UserModel, { IUserModel } from '../service/database/model/user.model';
 
 // Helpers
-import { BadRequestError } from '../errors';
+import { BadRequestError, NotFoundError } from '../errors';
 import { RequestStatusCodes } from '../const/request-status-codes';
 
 export async function createUser(req: Request, res: Response, next: NextFunction) {
@@ -72,4 +72,21 @@ export function updateRefreshToken(req: Request, res: Response) {
   res.status(RequestStatusCodes.Success).json({
     accessToken,
   });
+}
+
+export async function updateUserRole(req: Request, res: Response, next: NextFunction) {
+  const {
+    params: { id },
+    body,
+  } = req;
+
+  const user = await UserModel.findById(id);
+  if (!user) {
+    return next(new NotFoundError('User not found'));
+  }
+
+  user.role = body.role;
+  const updateUser = await user.save();
+
+  res.json({ user: updateUser });
 }

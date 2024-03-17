@@ -65,36 +65,6 @@ export async function updatePost(req: Request, res: Response, next: NextFunction
       return next(new ForbiddenError());
     }
 
-    const updatedPost = await PostModel.findByIdAndUpdate(id, body, { new: true });
-    if (!updatedPost) {
-      return next(new NotFoundError('Post not found'));
-    }
-
-    res.status(RequestStatusCodes.Success).json({
-      post: updatedPost.toJSON(),
-    });
-  } catch (e) {
-    next(e);
-  }
-}
-
-export async function updatePostPartially(req: Request, res: Response, next: NextFunction) {
-  try {
-    const {
-      params: { id },
-      body,
-    } = req;
-
-    const post = await PostModel.findById(id);
-    if (!post) {
-      return next(new NotFoundError('Post not found'));
-    }
-
-    const user = req.user as IUserModel;
-    if (!post.isAuthor(user)) {
-      return next(new ForbiddenError());
-    }
-
     const updatedPost = await PostModel.findByIdAndUpdate(id, { $set: body }, { new: true });
     if (!updatedPost) {
       return next(new NotFoundError('Post not found'));
