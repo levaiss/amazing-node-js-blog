@@ -19,6 +19,10 @@ export function authHandlerMiddleware(strategyName: AuthStrategiesType = AUTH_ST
       if (!user) {
         return next(new UnauthorizedError());
       }
+
+      req.user = user;
+
+      next();
     })(req, res, next);
   };
 }

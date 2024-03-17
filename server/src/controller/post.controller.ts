@@ -8,6 +8,7 @@ import { IUserModel } from '../service/database/model/user.model';
 // Helpers
 import { RequestStatusCodes } from '../const/request-status-codes';
 import { ForbiddenError, NotFoundError } from '../errors';
+import { isAdmin } from '../config/roles.config';
 
 export async function createPost(req: Request, res: Response, next: NextFunction) {
   try {
@@ -61,7 +62,7 @@ export async function updatePost(req: Request, res: Response, next: NextFunction
     }
 
     const user = req.user as IUserModel;
-    if (!post.isAuthor(user)) {
+    if (!(isAdmin(user.role) || post.isAuthor(user))) {
       return next(new ForbiddenError());
     }
 
@@ -86,7 +87,7 @@ export async function deletePost(req: Request, res: Response, next: NextFunction
   }
 
   const user = req.user as IUserModel;
-  if (!post.isAuthor(user)) {
+  if (!(isAdmin(user.role) || post.isAuthor(user))) {
     return next(new ForbiddenError());
   }
 

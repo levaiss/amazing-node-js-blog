@@ -9,8 +9,11 @@ import { Roles, ROLES_NAME } from '../../../config/roles.config';
 export interface IUserModel extends Document {
   username: string;
   email: string;
+  avatar: string;
   password: string;
   role: Roles;
+
+  isSameUser(user: IUserModel): boolean;
   createHashedPassword(password: string): string;
   validPassword(password: string): boolean;
 }
@@ -27,6 +30,9 @@ const UserSchema = new Schema<IUserModel>(
       unique: true,
       required: true,
     },
+    avatar: {
+      type: Schema.Types.String,
+    },
     password: {
       type: Schema.Types.String,
       required: true,
@@ -41,11 +47,16 @@ const UserSchema = new Schema<IUserModel>(
   },
 );
 
+UserSchema.methods.isSameUser = function (user: IUserModel): boolean {
+  return this._id.toString() === user._id.toString();
+};
+
 UserSchema.methods.toJSON = function () {
   return {
     id: this._id,
     username: this.username,
     email: this.email,
+    avatar: this.avatar,
     role: ROLES_NAME[this.role as Roles],
   };
 };

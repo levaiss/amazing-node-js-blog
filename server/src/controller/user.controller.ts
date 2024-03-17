@@ -8,7 +8,8 @@ import AuthService from '../service/auth';
 import UserModel, { IUserModel } from '../service/database/model/user.model';
 
 // Helpers
-import { BadRequestError, NotFoundError } from '../errors';
+import { isAdmin } from '../config/roles.config';
+import { BadRequestError, ForbiddenError, NotFoundError } from '../errors';
 import { RequestStatusCodes } from '../const/request-status-codes';
 
 export async function createUser(req: Request, res: Response, next: NextFunction) {
@@ -72,6 +73,28 @@ export function updateRefreshToken(req: Request, res: Response) {
   res.status(RequestStatusCodes.Success).json({
     accessToken,
   });
+}
+
+export async function updateUserProfile(req: Request, res: Response, next: NextFunction) {
+  const {
+    params: { id },
+    body,
+  } = req;
+
+  const user = await UserModel.findById(id);
+  if (!user) {
+    return next(new NotFoundError('User not found'));
+  }
+
+  const currentUser = req.user as IUserModel;
+  if (!(isAdmin(currentUser.role) || user.isSameUser(currentUser))) {
+    return next(new ForbiddenError());
+  }
+
+  user.set(body);
+  const updateUser = await user.save();
+
+  res.json({ user: updateUser });
 }
 
 export async function updateUserRole(req: Request, res: Response, next: NextFunction) {

@@ -62,3 +62,5 @@ export const ROLES_NAME: Record<Roles, string> = {
   [Roles.USER]: 'user',
   [Roles.EDITOR]: 'editor',
 };
+
+export const isAdmin = (role: Roles): boolean => role === Roles.ADMIN;
