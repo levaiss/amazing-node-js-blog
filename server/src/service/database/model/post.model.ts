@@ -1,8 +1,9 @@
 // Core
 import { Document, Schema, model } from 'mongoose';
 
-// Types
+// Models
 import { IUserModel } from './user.model';
+import { ICommentModel } from './comment.model';
 
 // Helpers
 import { truncateWithEllipses } from '../../../utils/truncate';
@@ -10,7 +11,9 @@ import { truncateWithEllipses } from '../../../utils/truncate';
 export interface IPostModel extends Document {
   title: string;
   body: string;
+  preview: string;
   author: IUserModel;
+  comments: ICommentModel[];
 
   isAuthor(user: IUserModel): boolean;
   toJSON(): object;
@@ -23,6 +26,9 @@ const PostSchema = new Schema<IPostModel>(
       type: String,
       required: true,
     },
+    preview: {
+      type: String,
+    },
     body: {
       type: String,
       required: true,
@@ -31,6 +37,12 @@ const PostSchema = new Schema<IPostModel>(
       type: Schema.Types.ObjectId,
       ref: 'User',
     },
+    comments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Comment',
+      },
+    ],
   },
   {
     timestamps: true,
@@ -45,10 +57,12 @@ PostSchema.methods.toJSON = function () {
   return {
     id: this._id,
     title: this.title,
+    preview: this.preview,
     body: this.body,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt,
     author: this.author.toJSON(),
+    comments: this.comments.map((comment: ICommentModel) => comment.toJSON()),
   };
 };
 

@@ -23,6 +23,8 @@ export function errorHandlerMiddleware(error: Error | CustomError | never, req: 
     data = error;
   }
 
+  console.log(error);
+
   res.status(code).json({
     message,
     data,

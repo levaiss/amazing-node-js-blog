@@ -13,11 +13,9 @@ import { isAdmin } from '../config/roles.config';
 export async function createPost(req: Request, res: Response, next: NextFunction) {
   try {
     const user = req.user as IUserModel;
-    const { title, body } = req.body;
 
     const post = new PostModel({
-      title,
-      body,
+      ...req.body,
       author: user._id,
     });
     await post.save();
@@ -38,7 +36,16 @@ export async function getPost(req: Request, res: Response, next: NextFunction) {
   try {
     const { id } = req.params;
 
-    const post = await PostModel.findById(id).populate('author');
+    const post = await PostModel.findById(id).populate([
+      'author',
+      {
+        path: 'comments',
+        populate: {
+          path: 'author',
+          model: 'User',
+        },
+      },
+    ]);
     if (!post) {
       return next(new NotFoundError(`Post not found`));
     }

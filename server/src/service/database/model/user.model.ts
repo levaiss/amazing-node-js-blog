@@ -16,6 +16,9 @@ export interface IUserModel extends Document {
   isSameUser(user: IUserModel): boolean;
   createHashedPassword(password: string): string;
   validPassword(password: string): boolean;
+
+  toJSON(): object;
+  toJSONShort(): object;
 }
 
 const UserSchema = new Schema<IUserModel>(
@@ -58,6 +61,14 @@ UserSchema.methods.toJSON = function () {
     email: this.email,
     avatar: this.avatar,
     role: ROLES_NAME[this.role as Roles],
+  };
+};
+
+UserSchema.methods.toJSONShort = function () {
+  return {
+    id: this._id,
+    username: this.username,
+    avatar: this.avatar,
   };
 };
 
