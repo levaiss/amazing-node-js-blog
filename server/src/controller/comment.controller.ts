@@ -33,3 +33,9 @@ export async function createComment(req: Request, res: Response, next: NextFunct
     next(e);
   }
 }
+
+export async function getComments(req: Request, res: Response) {
+  const comments = await CommentModel.find();
+
+  res.json({ comments: comments.map((comment) => comment.toJSON()) });
+}

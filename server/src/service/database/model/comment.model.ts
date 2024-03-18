@@ -1,7 +1,7 @@
 // Core
 import { Document, Schema, model } from 'mongoose';
 
-// Types
+// Models
 import { IUserModel } from './user.model';
 
 // Helpers
@@ -14,6 +14,7 @@ export interface ICommentModel extends Document {
 
   isAuthor(user: IUserModel): boolean;
   toJSON(): object;
+  toJSONForPost(): object;
   toJSONForProfile(): object;
 }
 
@@ -42,6 +43,17 @@ CommentSchema.methods.isAuthor = function (user: IUserModel): boolean {
 };
 
 CommentSchema.methods.toJSON = function () {
+  return {
+    id: this._id,
+    text: this.text,
+    createdAt: this.createdAt,
+    updatedAt: this.updatedAt,
+    author: this.author.toJSON(),
+    post: this.post,
+  };
+};
+
+CommentSchema.methods.toJSONForPost = function () {
   return {
     id: this._id,
     text: this.text,

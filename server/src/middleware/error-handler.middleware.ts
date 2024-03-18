@@ -7,6 +7,7 @@ import { RequestStatusCodes } from '../const/request-status-codes';
 import { CustomError } from '../errors';
 
 export function errorHandlerMiddleware(error: Error | CustomError | never, req: Request, res: Response, next: NextFunction) {
+  let isExpectedError = false;
   let code: number = RequestStatusCodes.BadRequest;
   let message: string = 'Something went wrong';
   let data = null;
@@ -15,15 +16,21 @@ export function errorHandlerMiddleware(error: Error | CustomError | never, req: 
     code = error.code;
     message = error.message;
     data = error.data;
+
+    isExpectedError = true;
   }
 
   if (error instanceof MongooseError) {
     code = RequestStatusCodes.Validation;
     message = error.message;
     data = error;
+
+    isExpectedError = true;
   }
 
-  console.log(error);
+  if (!isExpectedError) {
+    console.log(error);
+  }
 
   res.status(code).json({
     message,

@@ -62,7 +62,7 @@ PostSchema.methods.toJSON = function () {
     createdAt: this.createdAt,
     updatedAt: this.updatedAt,
     author: this.author.toJSON(),
-    comments: this.comments.map((comment: ICommentModel) => comment.toJSON()),
+    comments: this.comments.map((comment: ICommentModel) => comment.toJSONForPost()),
   };
 };
 
