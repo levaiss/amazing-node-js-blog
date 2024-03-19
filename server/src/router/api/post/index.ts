@@ -13,11 +13,11 @@ import { createPostValidator, updatePostValidator } from '../../../validator/pos
 
 const router = Router();
 
-router.post('/', authHandlerMiddleware(), requestValidationMiddleware(createPostValidator), createPost);
-
 router.get('/', getPosts);
 
 router.get('/:id', getPost);
+
+router.post('/', authHandlerMiddleware(), requestValidationMiddleware(createPostValidator), createPost);
 
 router.patch('/:id', authHandlerMiddleware(), requestValidationMiddleware(updatePostValidator), updatePost);
 

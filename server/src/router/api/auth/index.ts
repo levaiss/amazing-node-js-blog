@@ -16,6 +16,32 @@ import { userLoginValidator, userRegistrationValidator } from '../../../validato
 
 const router = Router();
 
+/**
+ * @swagger
+ * paths:
+ *   /auth/login:
+ *     post:
+ *      tags: [Auth]
+ *      requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               required:
+ *                 - username
+ *                 - password
+ *               properties:
+ *                 username:
+ *                   type: string
+ *                   description: User's username
+ *                 password:
+ *                   type: string
+ *                   description: User's password
+ *      responses:
+ *        200:
+ *          description: Return access and refresh tokens
+ */
 router.post('/login', requestValidationMiddleware(userLoginValidator), loginUser);
 
 router.post('/registration', requestValidationMiddleware(userRegistrationValidator), createUser);

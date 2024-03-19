@@ -1,9 +1,12 @@
 // Core
-import dotenv from 'dotenv';
 import path from 'path';
 import express, { Application } from 'express';
+import dotenv from 'dotenv';
 import cors from 'cors';
 import passport from 'passport';
+import morgan from 'morgan';
+import swaggerUi from 'swagger-ui-express';
+import swaggerJsdoc from 'swagger-jsdoc';
 
 dotenv.config({ path: '../.env' });
 
@@ -17,12 +20,12 @@ import Database from './service/database';
 import AuthService, { AUTH_STRATEGIES_TYPE } from './service/auth';
 
 // Middlewares
-import { requestLoggerMiddleware } from './middleware/request-logger.middleware';
 import { notFoundHandlerMiddleware } from './middleware/not-found-handler.middleware';
 import { errorHandlerMiddleware } from './middleware/error-handler.middleware';
 
 // Helpers
 import { rootPath } from './utils/path-helper';
+import { swaggerJsdocOptions } from './config/swaggerJsdoc.config';
 
 export default class Server {
   private readonly app: Application;
@@ -36,15 +39,18 @@ export default class Server {
   }
 
   async initServices() {
-    await new Database(this.mongoDbURI).connect();
+    await new Database(this.mongoDbURI).initialization();
   }
 
   initApplication() {
     this.app.use(cors());
     this.app.use(express.json());
+    this.app.use(morgan('tiny'));
     this.app.use(express.static(path.join(rootPath, 'client/dist')));
-    this.app.use(requestLoggerMiddleware);
+
+    this.app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerJsdoc(swaggerJsdocOptions)));
     this.app.use(router);
+
     this.app.use(passport.initialize());
     this.app.use(notFoundHandlerMiddleware);
     this.app.use(errorHandlerMiddleware);
@@ -55,7 +61,7 @@ export default class Server {
 
   initServer() {
     this.app.listen(this.port, async () => {
-      console.log(`🔥Server is Fire at http://localhost:${this.port}`);
+      console.log(`🔥 Server is Fire at http://localhost:${this.port}`);
     });
   }
 
