@@ -9,20 +9,13 @@ import { AUTH_STRATEGIES_TYPE, AuthStrategiesType } from '../service/auth';
 // Helpers
 import { UnauthorizedError } from '../errors';
 
-export function authHandlerMiddleware(strategyName: AuthStrategiesType = AUTH_STRATEGIES_TYPE.ACCESS_TOKEN) {
-  return (req: Request, res: Response, next: NextFunction) => {
+export const authHandlerMiddleware =
+  (strategyName: AuthStrategiesType = AUTH_STRATEGIES_TYPE.ACCESS_TOKEN) =>
+  (req: Request, res: Response, next: NextFunction) =>
     passport.authenticate(strategyName, (error: Error, user: IUserModel) => {
-      if (error) {
-        return next(error);
+      if (error || !user) {
+        return next(error || new UnauthorizedError());
       }
-
-      if (!user) {
-        return next(new UnauthorizedError());
-      }
-
       req.user = user;
-
       next();
     })(req, res, next);
-  };
-}
