@@ -113,3 +113,20 @@ export async function updateUserRole(req: Request, res: Response, next: NextFunc
 
   res.json({ user: updateUser });
 }
+
+export async function deleteUser(req: Request, res: Response, next: NextFunction) {
+  const {
+    params: { id },
+  } = req;
+
+  const user = await UserModel.findById(id);
+  if (!user) {
+    return next(new NotFoundError('User not found'));
+  }
+
+  await UserModel.deleteOne({ _id: id });
+
+  res.status(RequestStatusCodes.Success).json({
+    message: 'User successfully deleted',
+  });
+}

@@ -2,7 +2,7 @@
 import { Router } from 'express';
 
 // Controllers
-import { getUser, updateUserProfile, updateUserRole } from '../../../controller/user.controller';
+import { getUser, createUser, updateUserProfile, updateUserRole, deleteUser } from '../../../controller/user.controller';
 
 // Middlewares
 import { authHandlerMiddleware } from '../../../middleware/auth-handler.middleware';
@@ -11,7 +11,7 @@ import { requestValidationMiddleware } from '../../../middleware/request-validat
 
 // Helpers
 import { Roles } from '../../../config/roles.config';
-import { userRoleValidator, userProfileValidator } from '../../../validator/user.validator';
+import { userRoleValidator, userProfileValidator, userRegistrationValidator } from '../../../validator/user.validator';
 
 const router = Router();
 
@@ -32,7 +32,59 @@ const router = Router();
  *      500:
  *        description: Internal Server Error
  */
-router.get('/me', authHandlerMiddleware(), getUser);
+router.get('/profile', authHandlerMiddleware(), getUser);
+
+/**
+ * @swagger
+ * /user:
+ *  post:
+ *    summary: Create user
+ *    description: Create user
+ *    tags: [User]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            required:
+ *              - username
+ *              - password
+ *              - email
+ *            properties:
+ *              username:
+ *                type: string
+ *                description: User name
+ *                example: John Doe
+ *              password:
+ *                type: string
+ *                description: User password
+ *                example: password
+ *              email:
+ *                type: string
+ *                description: User email
+ *                example: john@dou.com
+ *    responses:
+ *      200:
+ *        description: User created
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized
+ *      403:
+ *        description: Forbidden
+ *      422:
+ *        description: Unprocessable entity
+ *      500:
+ *        description: Internal server error
+ */
+router.post(
+  '/',
+  authHandlerMiddleware(),
+  roleHandlerMiddleware(Roles.ADMIN),
+  requestValidationMiddleware(userRegistrationValidator),
+  createUser,
+);
 
 /**
  * @swagger
@@ -115,8 +167,7 @@ router.patch('/:id', authHandlerMiddleware(), requestValidationMiddleware(userPr
  *              - role
  *            properties:
  *              role:
- *                type: enum
- *                enum: [2, 3]
+ *                type: number
  *                description: User role
  *                example: 2
  *    responses:
@@ -140,5 +191,38 @@ router.patch(
   requestValidationMiddleware(userRoleValidator),
   updateUserRole,
 );
+
+/**
+ * @swagger
+ * /user/{id}:
+ *  delete:
+ *    summary: Delete user by id (Admin only)
+ *    tags: [User]
+ *    description: Delete user by id
+ *    security:
+ *      - bearerAuth: []
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        schema:
+ *          type: string
+ *          example: 123e4567-e89b-12d3-a456-426614174000
+ *          description: User id
+ *    responses:
+ *      200:
+ *        description: User deleted
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized
+ *      403:
+ *        description: Forbidden
+ *      404:
+ *        description: User not found
+ *      500:
+ *        description: Internal server error
+ */
+router.delete('/:id', authHandlerMiddleware(), roleHandlerMiddleware(Roles.ADMIN), deleteUser);
 
 export default router;
