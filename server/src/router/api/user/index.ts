@@ -38,9 +38,11 @@ router.get('/profile', authHandlerMiddleware(), getUser);
  * @swagger
  * /user:
  *  post:
- *    summary: Create user
+ *    summary: Create user (Admin only)
  *    description: Create user
  *    tags: [User]
+ *    security:
+ *      - bearerAuth: []
  *    requestBody:
  *      required: true
  *      content:
