@@ -8,7 +8,8 @@ import { IUserModel } from '../service/database/model/user.model';
 
 // Helpers
 import { RequestStatusCodes } from '../const/request-status-codes';
-import { NotFoundError } from '../errors';
+import { ForbiddenError, NotFoundError } from '../errors';
+import { isAdmin } from '../config/roles.config';
 
 export async function createComment(req: Request, res: Response, next: NextFunction) {
   try {
@@ -52,6 +53,54 @@ export async function getComments(req: Request, res: Response, next: NextFunctio
     );
 
     res.status(RequestStatusCodes.Success).json(paginatedComments);
+  } catch (e) {
+    next(e);
+  }
+}
+
+export async function updateComment(req: Request, res: Response, next: NextFunction) {
+  try {
+    const {
+      params: { id },
+      body: { text },
+    } = req;
+
+    const comment = await CommentModel.findById(id);
+    if (!comment) {
+      return next(new NotFoundError(`Comment not found`));
+    }
+
+    const user = req.user as IUserModel;
+    if (!(isAdmin(user.role) || comment.isAuthor(user))) {
+      return next(new ForbiddenError());
+    }
+
+    comment.text = text;
+    await comment.save();
+
+    res.status(RequestStatusCodes.Success).json({ comment });
+  } catch (e) {
+    next(e);
+  }
+}
+
+export async function deleteComment(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { id } = req.params;
+
+    const comment = await CommentModel.findById(id);
+    if (!comment) {
+      return next(new NotFoundError('Comment not found'));
+    }
+
+    const user = req.user as IUserModel;
+    if (!(isAdmin(user.role) || comment.isAuthor(user))) {
+      return next(new ForbiddenError());
+    }
+
+    await CommentModel.deleteOne({ _id: id });
+
+    res.status(RequestStatusCodes.Success).json({ comment: comment.toJSON() });
   } catch (e) {
     next(e);
   }

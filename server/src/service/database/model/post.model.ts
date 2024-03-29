@@ -65,7 +65,7 @@ PostSchema.methods.toJSON = function () {
     body: this.body,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt,
-    author: this.author.toJSON(),
+    author: this.author,
   };
 };
 
@@ -77,7 +77,7 @@ PostSchema.methods.toJSONFull = function () {
     body: this.body,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt,
-    author: this.author.toJSON(),
+    author: this.author.toJSONShort(),
     comments: this.comments.map((comment: ICommentModel) => comment.toJSONForPost()),
   };
 };

@@ -90,13 +90,11 @@ export async function updatePost(req: Request, res: Response, next: NextFunction
       return next(new ForbiddenError());
     }
 
-    const updatedPost = await PostModel.findByIdAndUpdate(id, { $set: body }, { new: true });
-    if (!updatedPost) {
-      return next(new NotFoundError('Post not found'));
-    }
+    post.set(body);
+    await post.save();
 
     res.status(RequestStatusCodes.Success).json({
-      post: updatedPost.toJSON(),
+      post,
     });
   } catch (e) {
     next(e);
@@ -105,7 +103,8 @@ export async function updatePost(req: Request, res: Response, next: NextFunction
 
 export async function deletePost(req: Request, res: Response, next: NextFunction) {
   const { id } = req.params;
-  const post = await PostModel.findById(id).populate('author');
+
+  const post = await PostModel.findById(id);
   if (!post) {
     return next(new NotFoundError('Post not found'));
   }
