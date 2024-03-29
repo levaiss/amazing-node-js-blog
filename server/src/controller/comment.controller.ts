@@ -29,7 +29,7 @@ export async function createComment(req: Request, res: Response, next: NextFunct
     post.comments.push(comment._id);
     await post.save();
 
-    res.status(RequestStatusCodes.Created).json({ comment: comment.toJSON() });
+    res.status(RequestStatusCodes.Created).json({ message: 'Comment created' });
   } catch (e) {
     next(e);
   }
@@ -78,7 +78,7 @@ export async function updateComment(req: Request, res: Response, next: NextFunct
     comment.text = text;
     await comment.save();
 
-    res.status(RequestStatusCodes.Success).json({ comment });
+    res.status(RequestStatusCodes.Success).json({ message: 'Comment updated' });
   } catch (e) {
     next(e);
   }

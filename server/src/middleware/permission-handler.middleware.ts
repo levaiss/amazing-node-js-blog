@@ -13,6 +13,7 @@ export function permissionHandlerMiddleware(permission: RolePermission) {
     const user = req.user as IUserModel;
     const roleConfig = rolesConfig.find(({ role }) => role === user.role);
     const isPermissionValid = roleConfig?.permissions.includes(permission);
+    console.log('isPermissionValid', isPermissionValid);
     if (!isPermissionValid) {
       next(new ForbiddenError());
     }

@@ -25,9 +25,7 @@ export async function createPost(req: Request, res: Response, next: NextFunction
     });
     await post.save();
 
-    const newPost = await PostModel.findById(post._id).populate(['author', 'categories']);
-
-    res.status(RequestStatusCodes.Created).json({ post: newPost });
+    res.status(RequestStatusCodes.Created).json({ message: 'Post created' });
   } catch (e) {
     next(e);
   }
@@ -112,9 +110,7 @@ export async function updatePost(req: Request, res: Response, next: NextFunction
     post.set(body);
     await post.save();
 
-    res.status(RequestStatusCodes.Success).json({
-      post,
-    });
+    res.status(RequestStatusCodes.Success).json({ message: 'Post updated' });
   } catch (e) {
     next(e);
   }
