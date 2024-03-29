@@ -1,18 +1,31 @@
+// Core
 import mongoose from 'mongoose';
+
+// Helpers
 import { InternalServerError } from '../../errors';
 
-export default class Database {
-  private readonly URI: string;
-  constructor(URI = '') {
-    this.URI = URI;
+export default class DatabaseService {
+  private static instance: DatabaseService;
+  private URI?: string;
+  constructor() {}
+  static getInstance() {
+    if (!DatabaseService.instance) {
+      DatabaseService.instance = new DatabaseService();
+    }
+    return DatabaseService.instance;
   }
 
-  async initialization() {
+  async initialization(URI = '') {
+    this.URI = URI;
     this.listenEvents();
     await this.connect();
   }
 
   private async connect() {
+    if (!this.URI) {
+      throw new InternalServerError('❌ Database URI is not provided');
+    }
+
     try {
       await mongoose.connect(this.URI);
     } catch (e) {

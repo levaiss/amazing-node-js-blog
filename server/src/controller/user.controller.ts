@@ -3,9 +3,13 @@ import { NextFunction, Request, Response } from 'express';
 
 // Services
 import AuthService from '../service/auth';
+import MailService from '../service/mail';
 
 // Models
 import UserModel, { IUserModel } from '../service/database/model/user.model';
+
+// Emails
+import { getRegistrationEmail } from '../email/registration.email';
 
 // Helpers
 import { isAdmin } from '../config/roles.config';
@@ -25,6 +29,9 @@ export async function createUser(req: Request, res: Response, next: NextFunction
 
     const accessToken = AuthService.createAccessToken(user);
     const refreshToken = AuthService.createRefreshToken(user);
+
+    const mailService = MailService.getInstance();
+    mailService.sendMail(getRegistrationEmail(user));
 
     res.status(RequestStatusCodes.Created).json({
       accessToken,
