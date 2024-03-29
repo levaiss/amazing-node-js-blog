@@ -51,7 +51,7 @@ CommentSchema.methods.toJSON = function () {
     text: this.text,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt,
-    author: this.author.toJSON(),
+    author: this.author.toJSONShort(),
     post: this.post,
   };
 };

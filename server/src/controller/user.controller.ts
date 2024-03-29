@@ -65,14 +65,18 @@ export function getUser(req: Request, res: Response) {
   });
 }
 
-export function updateRefreshToken(req: Request, res: Response) {
-  const user = req.user as IUserModel;
+export function updateRefreshToken(req: Request, res: Response, next: NextFunction) {
+  try {
+    const user = req.user as IUserModel;
 
-  const accessToken = AuthService.createAccessToken(user);
+    const accessToken = AuthService.createAccessToken(user);
 
-  res.status(RequestStatusCodes.Success).json({
-    accessToken,
-  });
+    res.status(RequestStatusCodes.Success).json({
+      accessToken,
+    });
+  } catch (e) {
+    next(e);
+  }
 }
 
 export async function updateUserProfile(req: Request, res: Response, next: NextFunction) {
