@@ -86,6 +86,9 @@ router.post('/login', requestBodyValidatorMiddleware(userLoginBodyValidator), lo
  */
 router.post('/registration', requestBodyValidatorMiddleware(userRegistrationBodyValidator), createUser);
 
+// TODO: Remove refresh token endpoint
+// TODO: Add password reset endpoint
+
 /**
  * @swagger
  * paths:

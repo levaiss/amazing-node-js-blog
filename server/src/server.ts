@@ -10,14 +10,17 @@ import swaggerJsdoc from 'swagger-jsdoc';
 
 dotenv.config({ path: '../.env' });
 
+// TODO: Add logger service
+
 // Router
 import router from './router/index';
 
 // Database
-import Database from './service/database';
+import DatabaseService from './service/database';
 
 // Services
 import AuthService, { AUTH_STRATEGIES_TYPE } from './service/auth';
+import MailService from './service/mail';
 
 // Middlewares
 import { notFoundHandlerMiddleware } from './middleware/not-found-handler.middleware';
@@ -26,21 +29,24 @@ import { errorHandlerMiddleware } from './middleware/error-handler.middleware';
 // Helpers
 import { rootPath } from './utils/path-helper';
 import { swaggerJsdocOptions } from './config/swaggerJsdoc.config';
-import { isProduction } from './utils/env-helper';
+import { mailerConfig } from './config/mailer.config';
+import { APP_PORT, isProduction, MONGO_DB_URI } from './utils/env-helper';
 
 export default class Server {
   private readonly app: Application;
   private readonly port: string | number;
-  private readonly mongoDbURI: string;
 
   constructor() {
     this.app = express();
-    this.port = process.env.APP_PORT || 3000;
-    this.mongoDbURI = process.env.MONGODB_URI || '';
+    this.port = APP_PORT;
   }
 
   async initServices() {
-    await new Database(this.mongoDbURI).initialization();
+    const databaseService = DatabaseService.getInstance();
+    await databaseService.initialization(MONGO_DB_URI);
+
+    const mailService = MailService.getInstance();
+    mailService.initialization(mailerConfig);
   }
 
   initApplication() {
