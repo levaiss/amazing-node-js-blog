@@ -1,5 +1,6 @@
 // Core
-import { Document, Schema, model } from 'mongoose';
+import { Document, Schema, model, type PaginateModel } from 'mongoose';
+import paginate from 'mongoose-paginate-v2';
 
 // Models
 import { IUserModel } from './user.model';
@@ -17,6 +18,7 @@ export interface IPostModel extends Document {
 
   isAuthor(user: IUserModel): boolean;
   toJSON(): object;
+  toJSONFull(): object;
   toJSONShort(): object;
 }
 
@@ -49,11 +51,25 @@ const PostSchema = new Schema<IPostModel>(
   },
 );
 
+PostSchema.plugin(paginate);
+
 PostSchema.methods.isAuthor = function (user: IUserModel): boolean {
   return this.author.toString() === user._id.toString();
 };
 
 PostSchema.methods.toJSON = function () {
+  return {
+    id: this._id,
+    title: this.title,
+    preview: this.preview,
+    body: this.body,
+    createdAt: this.createdAt,
+    updatedAt: this.updatedAt,
+    author: this.author.toJSON(),
+  };
+};
+
+PostSchema.methods.toJSONFull = function () {
   return {
     id: this._id,
     title: this.title,
@@ -76,4 +92,4 @@ PostSchema.methods.toJSONShort = function () {
   };
 };
 
-export default model<IPostModel>('Post', PostSchema);
+export default model<IPostModel, PaginateModel<IPostModel>>('Post', PostSchema);

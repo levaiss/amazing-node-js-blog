@@ -1,5 +1,6 @@
 // Core
-import { Document, Schema, model } from 'mongoose';
+import { Document, Schema, model, type PaginateModel } from 'mongoose';
+import paginate from 'mongoose-paginate-v2';
 
 // Models
 import { IUserModel } from './user.model';
@@ -38,6 +39,8 @@ const CommentSchema = new Schema<ICommentModel>(
   },
 );
 
+CommentSchema.plugin(paginate);
+
 CommentSchema.methods.isAuthor = function (user: IUserModel): boolean {
   return this.author.toString() === user._id.toString();
 };
@@ -73,4 +76,4 @@ CommentSchema.methods.toJSONForProfile = function () {
   };
 };
 
-export default model<ICommentModel>('Comment', CommentSchema);
+export default model<ICommentModel, PaginateModel<ICommentModel>>('Comment', CommentSchema);

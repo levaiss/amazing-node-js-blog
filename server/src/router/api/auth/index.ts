@@ -8,11 +8,11 @@ import { createUser, loginUser, updateRefreshToken } from '../../../controller/u
 import { AUTH_STRATEGIES_TYPE } from '../../../service/auth';
 
 // Middleware
-import { requestValidationMiddleware } from '../../../middleware/request-validation.middleware';
+import { requestBodyValidatorMiddleware } from '../../../middleware/validator.middleware';
 import { authHandlerMiddleware } from '../../../middleware/auth-handler.middleware';
 
 // Helpers
-import { userLoginValidator, userRegistrationValidator } from '../../../validator/user.validator';
+import { userLoginBodyValidator, userRegistrationBodyValidator } from '../../../validator/user.validator';
 
 const router = Router();
 
@@ -49,7 +49,7 @@ const router = Router();
  *        500:
  *          description: Internal server error
  */
-router.post('/login', requestValidationMiddleware(userLoginValidator), loginUser);
+router.post('/login', requestBodyValidatorMiddleware(userLoginBodyValidator), loginUser);
 
 /**
  * @swagger
@@ -84,7 +84,7 @@ router.post('/login', requestValidationMiddleware(userLoginValidator), loginUser
  *        500:
  *          description: Internal server error
  */
-router.post('/registration', requestValidationMiddleware(userRegistrationValidator), createUser);
+router.post('/registration', requestBodyValidatorMiddleware(userRegistrationBodyValidator), createUser);
 
 /**
  * @swagger

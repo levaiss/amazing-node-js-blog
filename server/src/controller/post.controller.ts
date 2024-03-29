@@ -26,10 +26,27 @@ export async function createPost(req: Request, res: Response, next: NextFunction
   }
 }
 
-export async function getPosts(req: Request, res: Response) {
-  const posts = await PostModel.find();
+export async function getPosts(req: Request, res: Response, next: NextFunction) {
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 5;
 
-  res.json({ posts: posts.map((post) => post.toJSONShort()) });
+    const paginatedPosts = await PostModel.paginate(
+      {},
+      {
+        populate: ['author'],
+        page,
+        limit,
+        customLabels: {
+          docs: 'posts',
+        },
+      },
+    );
+
+    res.status(RequestStatusCodes.Success).json(paginatedPosts);
+  } catch (e) {
+    next(e);
+  }
 }
 
 export async function getPost(req: Request, res: Response, next: NextFunction) {
@@ -50,7 +67,7 @@ export async function getPost(req: Request, res: Response, next: NextFunction) {
       return next(new NotFoundError(`Post not found`));
     }
 
-    res.status(RequestStatusCodes.Created).json({ post: post.toJSON() });
+    res.status(RequestStatusCodes.Created).json({ post: post.toJSONFull() });
   } catch (e) {
     next(e);
   }

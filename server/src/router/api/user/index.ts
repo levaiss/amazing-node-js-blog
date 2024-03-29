@@ -7,11 +7,11 @@ import { getUser, createUser, updateUserProfile, updateUserRole, deleteUser } fr
 // Middlewares
 import { authHandlerMiddleware } from '../../../middleware/auth-handler.middleware';
 import { roleHandlerMiddleware } from '../../../middleware/role-handler.middleware';
-import { requestValidationMiddleware } from '../../../middleware/request-validation.middleware';
+import { requestBodyValidatorMiddleware } from '../../../middleware/validator.middleware';
 
 // Helpers
 import { Roles } from '../../../config/roles.config';
-import { userRoleValidator, userProfileValidator, userRegistrationValidator } from '../../../validator/user.validator';
+import { userRoleBodyValidator, userProfileBodyValidator, userRegistrationBodyValidator } from '../../../validator/user.validator';
 
 const router = Router();
 
@@ -84,7 +84,7 @@ router.post(
   '/',
   authHandlerMiddleware(),
   roleHandlerMiddleware(Roles.ADMIN),
-  requestValidationMiddleware(userRegistrationValidator),
+  requestBodyValidatorMiddleware(userRegistrationBodyValidator),
   createUser,
 );
 
@@ -141,7 +141,7 @@ router.post(
  *      500:
  *        description: Internal server error
  */
-router.patch('/:id', authHandlerMiddleware(), requestValidationMiddleware(userProfileValidator), updateUserProfile);
+router.patch('/:id', authHandlerMiddleware(), requestBodyValidatorMiddleware(userProfileBodyValidator), updateUserProfile);
 
 /**
  * @swagger
@@ -190,7 +190,7 @@ router.patch(
   '/:id/role',
   authHandlerMiddleware(),
   roleHandlerMiddleware(Roles.ADMIN),
-  requestValidationMiddleware(userRoleValidator),
+  requestBodyValidatorMiddleware(userRoleBodyValidator),
   updateUserRole,
 );
 

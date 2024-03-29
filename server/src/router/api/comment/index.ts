@@ -6,10 +6,10 @@ import { createComment, getComments } from '../../../controller/comment.controll
 
 // Middlewares
 import { authHandlerMiddleware } from '../../../middleware/auth-handler.middleware';
-import { requestValidationMiddleware } from '../../../middleware/request-validation.middleware';
+import { requestBodyValidatorMiddleware, requestQueryValidatorMiddleware } from '../../../middleware/validator.middleware';
 
 // Helpers
-import { createCommentValidator } from '../../../validator/comment.validator';
+import { createCommentBodyValidator, getCommentsQueryValidator } from '../../../validator/comment.validator';
 
 const router = Router();
 
@@ -36,15 +36,15 @@ const router = Router();
  *        schema:
  *          type: integer
  *          description: Number of items per page
- *        default: 10
- *        example: 10
+ *        default: 5
+ *        example: 5
  *      responses:
  *        200:
  *          description: Returns list of comments
  *        500:
  *          description: Internal server error
  */
-router.get('/', getComments);
+router.get('/', requestQueryValidatorMiddleware(getCommentsQueryValidator), getComments);
 
 /**
  * @swagger
@@ -90,6 +90,6 @@ router.get('/', getComments);
  *        500:
  *          description: Internal server error
  */
-router.post('/', authHandlerMiddleware(), requestValidationMiddleware(createCommentValidator), createComment);
+router.post('/', authHandlerMiddleware(), requestBodyValidatorMiddleware(createCommentBodyValidator), createComment);
 
 export default router;

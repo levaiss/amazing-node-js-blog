@@ -17,8 +17,7 @@
     "client:preview": "npm run preview --prefix ../client"
   },
   "nodemonConfig": {
-    "ignore": [
-    ]
+    "ignore": []
   },
   "husky": {
     "hooks": {
@@ -42,6 +41,7 @@
     "joi": "^17.12.2",
     "mongodb": "^6.4.0",
     "mongoose": "^8.2.1",
+    "mongoose-paginate-v2": "^1.8.0",
     "mongoose-unique-validator": "^5.0.0",
     "morgan": "^1.10.0",
     "passport": "^0.7.0",

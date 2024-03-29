@@ -34,8 +34,25 @@ export async function createComment(req: Request, res: Response, next: NextFunct
   }
 }
 
-export async function getComments(req: Request, res: Response) {
-  const comments = await CommentModel.find();
+export async function getComments(req: Request, res: Response, next: NextFunction) {
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 5;
 
-  res.json({ comments: comments.map((comment) => comment.toJSON()) });
+    const paginatedComments = await CommentModel.paginate(
+      {},
+      {
+        populate: ['author'],
+        page,
+        limit,
+        customLabels: {
+          docs: 'comments',
+        },
+      },
+    );
+
+    res.status(RequestStatusCodes.Success).json(paginatedComments);
+  } catch (e) {
+    next(e);
+  }
 }

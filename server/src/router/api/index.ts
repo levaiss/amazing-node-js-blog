@@ -6,6 +6,7 @@ import authRoute from './auth';
 import userRouter from './user';
 import postRouter from './post';
 import commentRouter from './comment';
+import analyticRouter from './analytic';
 
 const router = Router();
 
@@ -33,5 +34,12 @@ router.use('/post', postRouter);
  *  name: Comment
  */
 router.use('/comment', commentRouter);
+
+/**
+ * @swagger
+ * tags:
+ *  name: Analytic
+ */
+router.use('/analytic', analyticRouter);
 
 export default router;

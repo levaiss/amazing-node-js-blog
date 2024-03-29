@@ -6,10 +6,10 @@ import { getPosts, getPost, createPost, updatePost, deletePost } from '../../../
 
 // Middlewares
 import { authHandlerMiddleware } from '../../../middleware/auth-handler.middleware';
-import { requestValidationMiddleware } from '../../../middleware/request-validation.middleware';
+import { requestBodyValidatorMiddleware, requestQueryValidatorMiddleware } from '../../../middleware/validator.middleware';
 
 // Helpers
-import { createPostValidator, updatePostValidator } from '../../../validator/post.validator';
+import { createPostBodyValidator, getPostsQueryValidator, updatePostBodyValidator } from '../../../validator/post.validator';
 
 const router = Router();
 
@@ -33,15 +33,15 @@ const router = Router();
  *        schema:
  *          type: integer
  *          description: Number of items per page
- *        default: 10
- *        example: 10
+ *        default: 5
+ *        example: 5
  *    responses:
  *      200:
  *        description: Get all posts
  *      500:
  *        description: Internal server error
  */
-router.get('/', getPosts);
+router.get('/', requestQueryValidatorMiddleware(getPostsQueryValidator), getPosts);
 
 /**
  * @swagger
@@ -113,7 +113,7 @@ router.get('/:id', getPost);
  *      500:
  *        description: Internal server error
  */
-router.post('/', authHandlerMiddleware(), requestValidationMiddleware(createPostValidator), createPost);
+router.post('/', authHandlerMiddleware(), requestBodyValidatorMiddleware(createPostBodyValidator), createPost);
 
 /**
  * @swagger
@@ -170,7 +170,7 @@ router.post('/', authHandlerMiddleware(), requestValidationMiddleware(createPost
  *      500:
  *        description: Internal server error
  */
-router.patch('/:id', authHandlerMiddleware(), requestValidationMiddleware(updatePostValidator), updatePost);
+router.patch('/:id', authHandlerMiddleware(), requestBodyValidatorMiddleware(updatePostBodyValidator), updatePost);
 
 /**
  * @swagger
