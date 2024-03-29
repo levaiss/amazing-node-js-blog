@@ -5,7 +5,6 @@ export enum Roles {
 }
 
 export enum UserPermissions {
-  UPDATE = 'updateUser',
   DELETE = 'deleteUser',
   UPDATE_ROLE = 'updateUserRole',
 }
@@ -16,44 +15,26 @@ export enum PostPermissions {
   DELETE = 'deletePost',
 }
 
-export enum CommentPermissions {
-  CREATE = 'createComment',
-  UPDATE = 'updateComment',
-  DELETE = 'deleteComment',
-}
-
-export type RolePermission = UserPermissions | PostPermissions | CommentPermissions;
+export type RolePermission = UserPermissions | PostPermissions;
 
 export const rolesConfig = Object.freeze([
   {
     role: Roles.ADMIN,
     permissions: [
-      UserPermissions.UPDATE,
       UserPermissions.UPDATE_ROLE,
       UserPermissions.DELETE,
       PostPermissions.CREATE,
       PostPermissions.UPDATE,
       PostPermissions.DELETE,
-      CommentPermissions.CREATE,
-      CommentPermissions.UPDATE,
-      CommentPermissions.DELETE,
     ],
   },
   {
     role: Roles.USER,
-    permissions: [UserPermissions.UPDATE, CommentPermissions.CREATE, CommentPermissions.UPDATE, CommentPermissions.DELETE],
+    permissions: [],
   },
   {
     role: Roles.EDITOR,
-    permissions: [
-      UserPermissions.UPDATE,
-      PostPermissions.CREATE,
-      PostPermissions.UPDATE,
-      PostPermissions.DELETE,
-      CommentPermissions.CREATE,
-      CommentPermissions.UPDATE,
-      CommentPermissions.DELETE,
-    ],
+    permissions: [PostPermissions.CREATE, PostPermissions.UPDATE, PostPermissions.DELETE],
   },
 ]);
 

@@ -36,25 +36,41 @@ export async function createUser(req: Request, res: Response, next: NextFunction
 }
 
 export async function loginUser(req: Request, res: Response, next: NextFunction) {
-  const { username, password } = req.body;
+  try {
+    const { username, password } = req.body;
 
-  const existingUser = await UserModel.findOne({ username });
-  if (!existingUser) {
-    return next(new BadRequestError('Username or password is incorrect'));
+    const existingUser = await UserModel.findOne({ username });
+    if (!existingUser) {
+      return next(new BadRequestError('Username or password is incorrect'));
+    }
+
+    const isPasswordValid = existingUser.validPassword(password);
+    if (!isPasswordValid) {
+      return next(new BadRequestError('Username or password is incorrect'));
+    }
+
+    const accessToken = AuthService.createAccessToken(existingUser);
+    const refreshToken = AuthService.createRefreshToken(existingUser);
+
+    res.status(RequestStatusCodes.Success).json({
+      accessToken,
+      refreshToken,
+    });
+  } catch (e) {
+    next(e);
   }
+}
 
-  const isPasswordValid = existingUser.validPassword(password);
-  if (!isPasswordValid) {
-    return next(new BadRequestError('Username or password is incorrect'));
+export async function getAllUsers(req: Request, res: Response, next: NextFunction) {
+  try {
+    const users = await UserModel.find({});
+
+    res.status(RequestStatusCodes.Success).json({
+      users,
+    });
+  } catch (e) {
+    next(e);
   }
-
-  const accessToken = AuthService.createAccessToken(existingUser);
-  const refreshToken = AuthService.createRefreshToken(existingUser);
-
-  res.status(RequestStatusCodes.Success).json({
-    accessToken,
-    refreshToken,
-  });
 }
 
 export function getUser(req: Request, res: Response) {

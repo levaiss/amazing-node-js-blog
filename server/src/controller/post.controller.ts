@@ -15,8 +15,6 @@ export async function createPost(req: Request, res: Response, next: NextFunction
   try {
     const user = req.user as IUserModel;
 
-    console.log(req.body.categories);
-
     const category = new CategoryModel();
     const categories = await category.ensureCategoriesExist(req.body.categories);
 
@@ -27,7 +25,9 @@ export async function createPost(req: Request, res: Response, next: NextFunction
     });
     await post.save();
 
-    res.status(RequestStatusCodes.Created).json({ post: post.toJSON() });
+    const newPost = await PostModel.findById(post._id).populate(['author', 'categories']);
+
+    res.status(RequestStatusCodes.Created).json({ post: newPost });
   } catch (e) {
     next(e);
   }

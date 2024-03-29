@@ -2,7 +2,7 @@
 import { Router } from 'express';
 
 // Controllers
-import { getAllPosts, getPost, createPost, updatePost, deletePost } from '../../../controller/post.controller';
+import { createPost, deletePost, getAllPosts, getPost, updatePost } from '../../../controller/post.controller';
 
 // Middlewares
 import { authHandlerMiddleware } from '../../../middleware/auth-handler.middleware';
@@ -10,6 +10,8 @@ import { requestBodyValidatorMiddleware, requestQueryValidatorMiddleware } from 
 
 // Helpers
 import { createPostBodyValidator, getPostsQueryValidator, updatePostBodyValidator } from '../../../validator/post.validator';
+import { permissionHandlerMiddleware } from '../../../middleware/permission-handler.middleware';
+import { PostPermissions } from '../../../config/roles.config';
 
 const router = Router();
 
@@ -78,7 +80,7 @@ router.get('/:id', getPost);
  * @swagger
  * /post:
  *  post:
- *    summary: Create a new post
+ *    summary: Create a new post (editor and admin only)
  *    tags: [Post]
  *    description: Create a new post
  *    security:
@@ -121,13 +123,19 @@ router.get('/:id', getPost);
  *      500:
  *        description: Internal server error
  */
-router.post('/', authHandlerMiddleware(), requestBodyValidatorMiddleware(createPostBodyValidator), createPost);
+router.post(
+  '/',
+  authHandlerMiddleware(),
+  permissionHandlerMiddleware(PostPermissions.CREATE),
+  requestBodyValidatorMiddleware(createPostBodyValidator),
+  createPost,
+);
 
 /**
  * @swagger
  * /post/{id}:
  *  patch:
- *    summary: Update post by id
+ *    summary: Update post by id (editor and admin only)
  *    tags: [Post]
  *    description: Update post by id
  *    security:
@@ -179,13 +187,19 @@ router.post('/', authHandlerMiddleware(), requestBodyValidatorMiddleware(createP
  *      500:
  *        description: Internal server error
  */
-router.patch('/:id', authHandlerMiddleware(), requestBodyValidatorMiddleware(updatePostBodyValidator), updatePost);
+router.patch(
+  '/:id',
+  authHandlerMiddleware(),
+  permissionHandlerMiddleware(PostPermissions.UPDATE),
+  requestBodyValidatorMiddleware(updatePostBodyValidator),
+  updatePost,
+);
 
 /**
  * @swagger
  * /post/{id}:
  *  delete:
- *    summary: Delete post by id
+ *    summary: Delete post by id (editor and admin only)
  *    tags: [Post]
  *    description: Delete post by id
  *    security:
@@ -209,6 +223,6 @@ router.patch('/:id', authHandlerMiddleware(), requestBodyValidatorMiddleware(upd
  *     500:
  *      description: Internal server error
  */
-router.delete('/:id', authHandlerMiddleware(), deletePost);
+router.delete('/:id', authHandlerMiddleware(), permissionHandlerMiddleware(PostPermissions.DELETE), deletePost);
 
 export default router;

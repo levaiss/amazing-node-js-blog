@@ -84,7 +84,9 @@ UserSchema.methods.validPassword = function (password: string): boolean {
 UserSchema.plugin(mongooseUniqueValidator, { message: 'must be unique' });
 
 UserSchema.pre('save', async function (next) {
-  this.password = this.createHashedPassword(this.password);
+  if (this.isNew || this.isModified('password')) {
+    this.password = this.createHashedPassword(this.password);
+  }
 
   next();
 });

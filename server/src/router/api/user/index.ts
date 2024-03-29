@@ -2,7 +2,7 @@
 import { Router } from 'express';
 
 // Controllers
-import { getUser, createUser, updateUserProfile, updateUserRole, deleteUser } from '../../../controller/user.controller';
+import { createUser, deleteUser, getAllUsers, getUser, updateUserProfile, updateUserRole } from '../../../controller/user.controller';
 
 // Middlewares
 import { authHandlerMiddleware } from '../../../middleware/auth-handler.middleware';
@@ -10,14 +10,15 @@ import { roleHandlerMiddleware } from '../../../middleware/role-handler.middlewa
 import { requestBodyValidatorMiddleware } from '../../../middleware/validator.middleware';
 
 // Helpers
-import { Roles } from '../../../config/roles.config';
-import { userRoleBodyValidator, userProfileBodyValidator, userRegistrationBodyValidator } from '../../../validator/user.validator';
+import { Roles, UserPermissions } from '../../../config/roles.config';
+import { userProfileBodyValidator, userRegistrationBodyValidator, userRoleBodyValidator } from '../../../validator/user.validator';
+import { permissionHandlerMiddleware } from '../../../middleware/permission-handler.middleware';
 
 const router = Router();
 
 /**
  * @swagger
- * /user/me:
+ * /user/profile:
  *  get:
  *    summary: Get user profile
  *    description: Get user profile
@@ -33,6 +34,27 @@ const router = Router();
  *        description: Internal Server Error
  */
 router.get('/profile', authHandlerMiddleware(), getUser);
+
+/**
+ * @swagger
+ * /user:
+ *  get:
+ *    summary: Get all users (Admin only)
+ *    description: Get all users
+ *    tags: [User]
+ *    security:
+ *      - bearerAuth: []
+ *    responses:
+ *      200:
+ *        description: Get all users
+ *      401:
+ *        description: Unauthorized
+ *      403:
+ *        description: Forbidden
+ *      500:
+ *        description: Internal Server Error
+ */
+router.get('/', authHandlerMiddleware(), roleHandlerMiddleware(Roles.ADMIN), getAllUsers);
 
 /**
  * @swagger
@@ -194,7 +216,7 @@ router.patch('/:id', authHandlerMiddleware(), requestBodyValidatorMiddleware(use
 router.patch(
   '/:id/role',
   authHandlerMiddleware(),
-  roleHandlerMiddleware(Roles.ADMIN),
+  permissionHandlerMiddleware(UserPermissions.UPDATE_ROLE),
   requestBodyValidatorMiddleware(userRoleBodyValidator),
   updateUserRole,
 );
@@ -230,6 +252,6 @@ router.patch(
  *      500:
  *        description: Internal server error
  */
-router.delete('/:id', authHandlerMiddleware(), roleHandlerMiddleware(Roles.ADMIN), deleteUser);
+router.delete('/:id', authHandlerMiddleware(), permissionHandlerMiddleware(UserPermissions.DELETE), deleteUser);
 
 export default router;
