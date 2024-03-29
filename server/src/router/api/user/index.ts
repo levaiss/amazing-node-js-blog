@@ -58,10 +58,14 @@ router.get('/profile', authHandlerMiddleware(), getUser);
  *                type: string
  *                description: User name
  *                example: John Doe
+ *                minLength: 3
+ *                maxLength: 24
  *              password:
  *                type: string
  *                description: User password
  *                example: password
+ *                minLength: 6
+ *                maxLength: 50
  *              email:
  *                type: string
  *                description: User email
@@ -113,12 +117,13 @@ router.post(
  *            required:
  *              - username
  *              - email
- *              - avatar
  *            properties:
  *              username:
  *                type: string
  *                description: User name
  *                example: John Doe
+ *                minLength: 3
+ *                maxLength: 24
  *              email:
  *                type: string
  *                description: User email

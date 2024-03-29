@@ -2,15 +2,15 @@
 import { Router } from 'express';
 
 // Controllers
-import { createComment, deleteComment, getComments, updateComment } from '../../../controller/comment.controller';
+import { createComment, deleteComment, getAllComments, updateComment } from '../../../controller/comment.controller';
 
 // Middlewares
 import { authHandlerMiddleware } from '../../../middleware/auth-handler.middleware';
 import { requestBodyValidatorMiddleware, requestQueryValidatorMiddleware } from '../../../middleware/validator.middleware';
+import { roleHandlerMiddleware } from '../../../middleware/role-handler.middleware';
 
 // Helpers
 import { createCommentBodyValidator, getCommentsQueryValidator, updateCommentBodyValidator } from '../../../validator/comment.validator';
-import { roleHandlerMiddleware } from '../../../middleware/role-handler.middleware';
 import { Roles } from '../../../config/roles.config';
 
 const router = Router();
@@ -46,7 +46,7 @@ const router = Router();
  *        500:
  *          description: Internal server error
  */
-router.get('/', requestQueryValidatorMiddleware(getCommentsQueryValidator), getComments);
+router.get('/', requestQueryValidatorMiddleware(getCommentsQueryValidator), getAllComments);
 
 /**
  * @swagger
@@ -73,6 +73,7 @@ router.get('/', requestQueryValidatorMiddleware(getCommentsQueryValidator), getC
  *                  description: Comment content
  *                  example: This is a comment
  *                  required: true
+ *                  minLength: 3
  *                post:
  *                  type: string
  *                  description: Post ID
@@ -123,6 +124,7 @@ router.post('/', authHandlerMiddleware(), requestBodyValidatorMiddleware(createC
  *                type: string
  *                description: Comment content
  *                example: Comment content
+ *                minLength: 3
  *    responses:
  *      200:
  *        description: Comment updated

@@ -7,6 +7,7 @@ import userRouter from './user';
 import postRouter from './post';
 import commentRouter from './comment';
 import analyticRouter from './analytic';
+import categoryRouter from './category';
 
 const router = Router();
 
@@ -34,6 +35,13 @@ router.use('/post', postRouter);
  *  name: Comment
  */
 router.use('/comment', commentRouter);
+
+/**
+ * @swagger
+ * tags:
+ *  name: Category
+ */
+router.use('/category', categoryRouter);
 
 /**
  * @swagger

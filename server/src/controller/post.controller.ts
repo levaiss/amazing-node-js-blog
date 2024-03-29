@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 
 // Models
 import PostModel from '../service/database/model/post.model';
+import CategoryModel, { type ICategoryModel } from '../service/database/model/category.model';
 import { IUserModel } from '../service/database/model/user.model';
 
 // Helpers
@@ -14,9 +15,15 @@ export async function createPost(req: Request, res: Response, next: NextFunction
   try {
     const user = req.user as IUserModel;
 
+    console.log(req.body.categories);
+
+    const category = new CategoryModel();
+    const categories = await category.ensureCategoriesExist(req.body.categories);
+
     const post = new PostModel({
       ...req.body,
       author: user._id,
+      categories: categories.map((category: ICategoryModel) => category._id),
     });
     await post.save();
 
@@ -26,15 +33,26 @@ export async function createPost(req: Request, res: Response, next: NextFunction
   }
 }
 
-export async function getPosts(req: Request, res: Response, next: NextFunction) {
+export async function getAllPosts(req: Request, res: Response, next: NextFunction) {
   try {
+    const { category: categoryName } = req.query;
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 5;
+    let category = null;
+
+    if (categoryName) {
+      category = await CategoryModel.findOne({ name: categoryName });
+      if (!category) {
+        return next(new NotFoundError(`Category not found`));
+      }
+    }
 
     const paginatedPosts = await PostModel.paginate(
-      {},
       {
-        populate: ['author'],
+        ...(category && { categories: category._id }),
+      },
+      {
+        populate: ['author', 'categories'],
         page,
         limit,
         customLabels: {
@@ -55,6 +73,7 @@ export async function getPost(req: Request, res: Response, next: NextFunction) {
 
     const post = await PostModel.findById(id).populate([
       'author',
+      'categories',
       {
         path: 'comments',
         populate: {
@@ -116,5 +135,5 @@ export async function deletePost(req: Request, res: Response, next: NextFunction
 
   await PostModel.deleteOne({ _id: id });
 
-  res.status(RequestStatusCodes.Success).json({ post: post.toJSON() });
+  res.status(RequestStatusCodes.Success).json({ message: 'Post deleted' });
 }

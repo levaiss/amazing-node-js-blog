@@ -2,7 +2,10 @@ import Joi from 'joi';
 
 export const createCommentBodyValidator = Joi.object({
   text: Joi.string().min(3).required(),
-  post: Joi.string().required(),
+  post: Joi.string()
+    .regex(/^[0-9a-fA-F]{24}$/)
+    .message('Invalid post id')
+    .required(),
 }).required();
 
 export const updateCommentBodyValidator = Joi.object({

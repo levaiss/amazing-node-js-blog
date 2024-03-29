@@ -35,7 +35,7 @@ export async function createComment(req: Request, res: Response, next: NextFunct
   }
 }
 
-export async function getComments(req: Request, res: Response, next: NextFunction) {
+export async function getAllComments(req: Request, res: Response, next: NextFunction) {
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 5;
@@ -100,7 +100,7 @@ export async function deleteComment(req: Request, res: Response, next: NextFunct
 
     await CommentModel.deleteOne({ _id: id });
 
-    res.status(RequestStatusCodes.Success).json({ comment: comment.toJSON() });
+    res.status(RequestStatusCodes.Success).json({ message: 'Comment deleted' });
   } catch (e) {
     next(e);
   }

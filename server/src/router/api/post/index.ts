@@ -2,7 +2,7 @@
 import { Router } from 'express';
 
 // Controllers
-import { getPosts, getPost, createPost, updatePost, deletePost } from '../../../controller/post.controller';
+import { getAllPosts, getPost, createPost, updatePost, deletePost } from '../../../controller/post.controller';
 
 // Middlewares
 import { authHandlerMiddleware } from '../../../middleware/auth-handler.middleware';
@@ -35,13 +35,19 @@ const router = Router();
  *          description: Number of items per page
  *        default: 5
  *        example: 5
+ *      - in: query
+ *        name: category
+ *        schema:
+ *          type: string
+ *          description: Category name
+ *        example: history
  *    responses:
  *      200:
  *        description: Get all posts
  *      500:
  *        description: Internal server error
  */
-router.get('/', requestQueryValidatorMiddleware(getPostsQueryValidator), getPosts);
+router.get('/', requestQueryValidatorMiddleware(getPostsQueryValidator), getAllPosts);
 
 /**
  * @swagger
@@ -91,6 +97,7 @@ router.get('/:id', getPost);
  *                type: string
  *                description: Post title
  *                example: Post title
+ *                minLength: 3
  *              preview:
  *                type: url
  *                description: Post preview url
@@ -99,6 +106,7 @@ router.get('/:id', getPost);
  *                type: string
  *                description: Post content
  *                example: Post content
+ *                minLength: 60
  *    responses:
  *      201:
  *        description: Post created
@@ -140,12 +148,12 @@ router.post('/', authHandlerMiddleware(), requestBodyValidatorMiddleware(createP
  *            required:
  *              - title
  *              - body
- *              - preview
  *            properties:
  *              title:
  *                type: string
  *                description: Post title
  *                example: Post title
+ *                minLength: 3
  *              preview:
  *                type: url
  *                description: Post preview url
@@ -154,6 +162,7 @@ router.post('/', authHandlerMiddleware(), requestBodyValidatorMiddleware(createP
  *                type: string
  *                description: Post content
  *                example: Post content
+ *                minLength: 60
  *    responses:
  *      200:
  *        description: Post updated

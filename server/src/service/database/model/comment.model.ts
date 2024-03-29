@@ -42,8 +42,6 @@ const CommentSchema = new Schema<ICommentModel>(
 CommentSchema.plugin(paginate);
 
 CommentSchema.methods.isAuthor = function (user: IUserModel): boolean {
-  console.log(this.author.toString());
-  console.log(user._id.toString());
   return this.author.toString() === user._id.toString();
 };
 
@@ -64,7 +62,7 @@ CommentSchema.methods.toJSONForPost = function () {
     text: this.text,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt,
-    author: this.author.toJSON(),
+    author: this.author.toJSONShort(),
   };
 };
 

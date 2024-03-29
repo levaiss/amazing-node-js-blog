@@ -5,9 +5,7 @@ import paginate from 'mongoose-paginate-v2';
 // Models
 import { IUserModel } from './user.model';
 import { ICommentModel } from './comment.model';
-
-// Helpers
-import { truncateWithEllipses } from '../../../utils/truncate';
+import { ICategoryModel } from './category.model';
 
 export interface IPostModel extends Document {
   title: string;
@@ -15,11 +13,11 @@ export interface IPostModel extends Document {
   preview: string;
   author: IUserModel;
   comments: ICommentModel[];
+  categories: ICategoryModel[];
 
   isAuthor(user: IUserModel): boolean;
   toJSON(): object;
   toJSONFull(): object;
-  toJSONShort(): object;
 }
 
 const PostSchema = new Schema<IPostModel>(
@@ -45,6 +43,12 @@ const PostSchema = new Schema<IPostModel>(
         ref: 'Comment',
       },
     ],
+    categories: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Category',
+      },
+    ],
   },
   {
     timestamps: true,
@@ -65,7 +69,8 @@ PostSchema.methods.toJSON = function () {
     body: this.body,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt,
-    author: this.author,
+    author: this.author.toJSONShort(),
+    categories: this.categories.map((category: ICategoryModel) => category.toJSONForPost()),
   };
 };
 
@@ -79,16 +84,7 @@ PostSchema.methods.toJSONFull = function () {
     updatedAt: this.updatedAt,
     author: this.author.toJSONShort(),
     comments: this.comments.map((comment: ICommentModel) => comment.toJSONForPost()),
-  };
-};
-
-PostSchema.methods.toJSONShort = function () {
-  return {
-    id: this._id,
-    title: this.title,
-    body: truncateWithEllipses(this.body),
-    createdAt: this.createdAt,
-    updatedAt: this.updatedAt,
+    categories: this.categories.map((category: ICategoryModel) => category.toJSONForPost()),
   };
 };
 
