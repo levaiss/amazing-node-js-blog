@@ -2,6 +2,9 @@
 import { join } from 'path';
 import { srcPath } from '../utils/path-helper';
 
+// Helpers
+import { isProduction } from '../utils/env-helper';
+
 export const swaggerJsdocOptions = {
   definition: {
     openapi: '3.0.0',
@@ -21,5 +24,5 @@ export const swaggerJsdocOptions = {
       },
     ],
   },
-  apis: [join(srcPath, '/router/**/*.ts')],
+  apis: [join(srcPath, `/router/**/*.${isProduction ? 'js' : 'ts'}`)],
 };

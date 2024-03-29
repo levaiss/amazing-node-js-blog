@@ -1,0 +1,14 @@
+{
+  "name": "amazing-blog-app",
+  "version": "1.0.0",
+  "description": "homework for Hillel Node.js course",
+  "scripts": {
+    "install": "cd client && npm install && cd ../server && npm install",
+    "start:dev:server": "cd server && npm run server:dev",
+    "start:dev:client": "cd client && npm run dev",
+    "build:server": "cd server && npm run build",
+    "build:client": "cd client && npm run build",
+    "build": "npm run build:client && npm run build:server",
+    "start": "cd server && npm run start"
+  }
+}

@@ -39,7 +39,7 @@ export async function getAllPosts(req: Request, res: Response, next: NextFunctio
     let category = null;
 
     if (categoryName) {
-      category = await CategoryModel.findOne({ name: categoryName });
+      category = await CategoryModel.findOne({ name: String(categoryName) });
       if (!category) {
         return next(new NotFoundError(`Category not found`));
       }
