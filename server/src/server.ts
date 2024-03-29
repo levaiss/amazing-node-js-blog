@@ -26,6 +26,7 @@ import { errorHandlerMiddleware } from './middleware/error-handler.middleware';
 // Helpers
 import { rootPath } from './utils/path-helper';
 import { swaggerJsdocOptions } from './config/swaggerJsdoc.config';
+import { isProduction } from './utils/env-helper';
 
 export default class Server {
   private readonly app: Application;
@@ -45,7 +46,11 @@ export default class Server {
   initApplication() {
     this.app.use(cors());
     this.app.use(express.json());
-    this.app.use(morgan('tiny'));
+
+    if (!isProduction) {
+      this.app.use(morgan('tiny'));
+    }
+
     this.app.use(express.static(path.join(rootPath, 'client/dist')));
 
     this.app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerJsdoc(swaggerJsdocOptions)));

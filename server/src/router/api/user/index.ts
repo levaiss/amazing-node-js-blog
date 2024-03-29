@@ -35,6 +35,8 @@ const router = Router();
  */
 router.get('/profile', authHandlerMiddleware(), getUser);
 
+// TODO: self posts and comments
+
 /**
  * @swagger
  * /user:

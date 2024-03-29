@@ -1,27 +1,22 @@
 {
-  "name": "hillel-node-js-levin",
+  "name": "server",
   "version": "1.0.0",
   "description": "homework for Hillel Node.js course",
   "main": "src/index.ts",
   "scripts": {
-    "build": "npm run server:build && npm run client:build",
-    "server:build": "npx tsc",
-    "server:start": "node dist/index.js",
-    "server:dev": "nodemon src/index.ts",
-    "server:test": "echo \"Error: no test specified\" && exit 1",
-    "server:lint": "eslint src/**/*.ts",
-    "server:lint:fix": "eslint src/**/*.ts --fix",
-    "client:dev": "npm run dev --prefix ../client",
-    "client:build": "npm run build --prefix ../client",
-    "client:lint": "npm run lint --prefix ../client",
-    "client:preview": "npm run preview --prefix ../client"
+    "build": "npx tsc",
+    "start": "node dist/index.js",
+    "dev": "nodemon src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix"
   },
   "nodemonConfig": {
     "ignore": []
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run server:lint:fix"
+      "pre-commit": "npm run lint:fix"
     }
   },
   "keywords": [
@@ -68,6 +63,7 @@
     "@typescript-eslint/eslint-plugin": "^6.20.0",
     "@typescript-eslint/parser": "^6.20.0",
     "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
     "husky": "^4.3.8",
     "nodemon": "^3.0.3",
